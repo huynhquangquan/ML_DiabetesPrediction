@@ -9,8 +9,7 @@ if __name__=="__main__":
     check_raw = bool(utilities.check_raw())
     check_model = bool(utilities.check_model("random_forest"))
     if check_raw is False and check_model is False:
-        print("Prediction RF thất bại")
-        sys.exit()
+        raise RuntimeError("Prediction RF thất bại")
 
     # Load raw data and model
     model = utilities.joblib_load("random_forest")
@@ -59,9 +58,20 @@ if __name__=="__main__":
 
     # Count Accuracy based on correct predict
     accuracy = (X['Actual']==X['Predict']).sum() / len(X)
+    accuracy_on_neg = ((X['Actual']==0) & (X['Predict']==0)).sum() / (X['Actual']==0).sum()
+    accuracy_on_pos = ((X['Actual']==1) & (X['Predict']==1)).sum() / (X['Actual']==1).sum()
     print(f'Accuracy: {accuracy*100:.2f}%')
+    print(f'Accuracy on Not Diabetes: {accuracy_on_neg*100:.2f}%')
+    print(f'Accuracy on Diabetes: {accuracy_on_pos*100:.2f}%')
 
+    results = pd.DataFrame(columns=["Model","Accuracy","Accuracy on Not Diabetes","Accuracy on Diabetes"])
+    results = pd.DataFrame({
+        "Model": ["RandomForestClassifier"],
+        "Accuracy": [f'{accuracy*100:.2f}%'],
+        "Accuracy on Not Diabetes": [f'{accuracy_on_neg*100:.2f}%'],
+        "Accuracy on Diabetes": [f'{accuracy_on_pos*100:.2f}%']
+    })
 
     dir = Path(__file__).parent.parent
-    X.to_csv(dir / '..' / 'results' / 'reports' / 'Pred vs Data.csv')
-    print("-----Đã lưu Pred vs Data")
+    results.to_csv(dir / '..' / 'results' / 'reports' / 'PredvsData_RF.csv',index=False)
+    print("-----Đã lưu PredvsData_RF")

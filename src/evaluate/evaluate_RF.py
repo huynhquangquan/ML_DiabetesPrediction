@@ -8,6 +8,11 @@ from src import utilities
 import numpy as np
 
 if __name__ == "__main__":
+    check_processed = utilities.check_processed()
+    check_model = utilities.check_model("random_forest")
+    if check_processed is False and check_model is False:
+        raise RuntimeError("Evaluate thất bại")
+
     # Load data and model
     base_dir = Path(__file__).parent.parent.parent
     test = pd.read_csv(base_dir / 'data' / 'processed' / 'test.csv')
@@ -30,14 +35,19 @@ if __name__ == "__main__":
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test,y_pred)
+    print(f'Average(CV) Accuracy: {scores.mean():.2f}')
+    print(f'Accuracy on Test: {accuracy:.2f}')
+    print(f'Precision: {precision:.2f}')
+    print(f'Recall: {recall:.2f}')
+    print(f'F1-score: {f1:.2f}')
 
     # Create table to save results
-    ResultTable = pd.DataFrame(columns= ["Model","Average(CV) Accuracy","Test Accuracy","Precision","Recall","f1-score"])
+    ResultTable = pd.DataFrame(columns= ["Model","Average(CV) Accuracy","Accuracy on Test","Precision","Recall","F1-score"])
 
     ResultTable = pd.DataFrame({
         "Model": ["RandomForestClassifier"],
         "Average(CV) Accuracy": f'{scores.mean():.2f}',
-        "Test Accuracy": f'{accuracy:.2f}',
+        "Accuracy on Test": f'{accuracy:.2f}',
         "Precision": f'{precision:.2f}',
         "Recall": f'{recall:.2f}',
         "F1-score": f'{f1:.2f}'

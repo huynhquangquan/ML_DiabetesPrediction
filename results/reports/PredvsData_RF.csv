@@ -1,0 +1,2 @@
+Model,Accuracy,Accuracy on Not Diabetes,Accuracy on Diabetes
+RandomForestClassifier,89.71%,93.20%,83.21%

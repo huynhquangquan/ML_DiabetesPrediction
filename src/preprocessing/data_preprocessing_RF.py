@@ -59,7 +59,7 @@ def remove_outliers(df):
 
 def save_data_preprocessed(df):
     # Split to train and test data
-    train,test = train_test_split(df, test_size=0.2, random_state=42)
+    train,test = train_test_split(df, test_size=0.25, random_state=42)
     print("-------Chia dữ liệu thành train data và test data thành công")
 
     Base_dir = Path(__file__).parent.parent
@@ -72,7 +72,7 @@ def save_data_preprocessed(df):
 if __name__ == "__main__":
     check_raw = bool(utilities.check_raw())
     if check_raw is False:
-        sys.exit()
+        raise RuntimeError("Preprocessing thất bại")
     df = utilities.read_raw('diabetes.csv')
     print(df)
     check_samples(df)

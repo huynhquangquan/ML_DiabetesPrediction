@@ -11,8 +11,7 @@ if __name__=="__main__":
     check_processed = bool(utilities.check_processed())
     check_model = bool(utilities.check_model("random_forest"))
     if check_processed is False and check_model is False:
-        print("Visualize RF thất bại")
-        sys.exit()
+        raise RuntimeError("Visualize RF thất bại")
 
     # Load processed data and model
     # train = utilities.read_processed("train.csv")
