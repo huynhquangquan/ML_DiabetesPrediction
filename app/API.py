@@ -29,12 +29,18 @@ def API():
         allow_headers=["*"],  # Allows all headers
     )  # Connect HTML
 
+    # Must be rf or logr according to the project
     name = input("Nhập model dự đoán: ")
-    if "random" in name.lower() and "forest" in name.lower():
+    if "random" in name.lower() and "forest" in name.lower() or name.lower() == "rf":
         name = "random_forest"
-    elif "logistic" in name.lower():
+    elif "logistic" in name.lower() or name.lower() == "logr":
         name = "logistic"
     else:
+        return None
+
+    # Check whether the model exist or not
+    check = bool(utilities.check_model(name))
+    if check is False:
         return None
 
     full_pipeline = utilities.joblib_load(f'{name}')
@@ -69,4 +75,4 @@ if __name__ == '__main__':
     if app is not None:
         uvicorn.run(app,host='127.0.0.1',port=8000)
     else:
-        print("Model không tồn tại")
+        print("API chạy thất bại")

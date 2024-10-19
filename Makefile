@@ -1,3 +1,7 @@
+#-----------------Download Data------------------
+download-raw-data:
+	python -m src.dataset.download_data
+
 #-----------------Target to run the model pipeline------------------
 
 # ML=rf or ML=logr
@@ -26,7 +30,7 @@ else ifeq ($(ML),logr)
 	python -m src.evaluate.evaluate_LogR
 endif
 
-# Review/evaluate model prediction
+# Review evaluated model prediction
 predict:
 ifeq ($(ML),rf)
 	python -m src.prediction.prediction_RF
@@ -34,8 +38,15 @@ else ifeq ($(ML),logr)
 	python -m src.prediction.prediction_LogR
 endif
 
+visualize:
+ifeq ($(ML),rf)
+	python -m src.visualization.RF_visualization
+else ifeq ($(ML),logr)
+	python -m src.visualization.LogR_visualization
+endif
+
 # Run all scripts
-run-all: preprocess train evaluate
+run-all: preprocess train evaluate predict visualize
 
 
 #--------------------------Clean---------------------------
@@ -45,15 +56,23 @@ WINDOW = del /Q
 
 # OS=win or OS=unix
 # Clear processed data
-clean-processed-data:
+clear-processed-data:
 ifeq ($(OS),win)
 	$(WINDOW) data\processed\*
 else ifeq ($(OS),unix)
 	$(UNIX) data/processed/*
 endif
 
+# Clear raw data
+clear-raw-data:
+ifeq ($(OS),win)
+	$(WINDOW) data\raw\*
+else ifeq ($(OS),unix)
+	$(UNIX) data/raw/*
+endif
+
 # Clear models results
-clean-model-results:
+clear-models-and-results:
 ifeq ($(OS),win)
 	$(WINDOW) results\figures\*
 	$(WINDOW) results\reports\*
@@ -64,7 +83,7 @@ else ifeq ($(OS),unix)
 	$(UNIX) models/*
 endif
 
-clean-all: clean-processed-data clean-model-results
+clear-all: clear-raw-data clear-processed-data clear-models-and-results
 
 # Example: make clean-processed-data OS=win
 

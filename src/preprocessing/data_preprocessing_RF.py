@@ -59,17 +59,20 @@ def remove_outliers(df):
 
 def save_data_preprocessed(df):
     # Split to train and test data
-    train,test = train_test_split(df, test_size=0.25, random_state=42)
+    train,test = train_test_split(df, test_size=0.2, random_state=42)
     print("-------Chia dữ liệu thành train data và test data thành công")
 
     Base_dir = Path(__file__).parent.parent
     # NOTE: A must whenever saving processed data, index always False, else it will include index as a column in data
-    train.to_csv(Base_dir / '../data/processed/train.csv',index=False)
-    test.to_csv(Base_dir / '../data/processed/test.csv',index=False)
+    train.to_csv(Base_dir / '..' / 'data' / 'processed' / 'train.csv',index=False)
+    test.to_csv(Base_dir / '..' / 'data' / 'processed' / 'test.csv',index=False)
     print("-------Lưu data sau khi xử lý")
     print("-------Lưu hoàn tất!")
 
 if __name__ == "__main__":
+    check_raw = bool(utilities.check_raw())
+    if check_raw is False:
+        sys.exit()
     df = utilities.read_raw('diabetes.csv')
     print(df)
     check_samples(df)
