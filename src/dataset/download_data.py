@@ -2,12 +2,16 @@ import kagglehub
 import shutil
 from pathlib import Path
 from src import utilities
+
 def download_raw():
+    dataset = utilities.dataset_select()['dataset']
+    source = utilities.dataset_select()['source']
+
     # Download the dataset to the custom path
     check_raw = bool(utilities.check_raw())
-    path = kagglehub.dataset_download("mathchi/diabetes-data-set")
+    path = kagglehub.dataset_download(source)
     print("Đường dẫn dataset được tải về:", path)
-    path_modified = Path(path) / 'diabetes.csv' # path is currently a string, need Path to convert it to true Path else str error will appear
+    path_modified = Path(path) / dataset # path is currently a string, need Path to convert it to true Path else str error will appear
 
     base_dir = Path(__file__).parent.parent.parent
     destination = base_dir / 'data' / 'raw'

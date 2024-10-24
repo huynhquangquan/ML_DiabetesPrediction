@@ -17,7 +17,6 @@ if __name__ == "__main__":
     X_train = train.drop(columns=['Outcome'])
     y_train = train['Outcome']
 
-    # class_weights={0:1,1:2}
     model = RandomForestClassifier(n_estimators=120, random_state=42)
     model.fit(X_train, y_train)
 

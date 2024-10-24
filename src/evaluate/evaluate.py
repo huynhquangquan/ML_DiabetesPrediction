@@ -8,8 +8,10 @@ from src import utilities
 import numpy as np
 
 if __name__ == "__main__":
+    model_name = utilities.model_select()
+
     check_processed = utilities.check_processed()
-    check_model = utilities.check_model("random_forest")
+    check_model = utilities.check_model(model_name)
     if check_processed is False and check_model is False:
         raise RuntimeError("Evaluate thất bại")
 
@@ -22,9 +24,9 @@ if __name__ == "__main__":
     X_test = test.drop(columns=['Outcome'])
     y_test = test['Outcome']
     print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
-    model = utilities.joblib_load("random_forest")
+    model = utilities.joblib_load(model_name)
 
-    # prediction on test data
+    # Create pred variable
     y_pred = model.predict(X_test)
 
     # Evaluate model with cross_validation

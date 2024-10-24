@@ -1,52 +1,31 @@
-#-----------------Download Data------------------
+#-----------------Download Data and Create External Data------------------
 download-raw-data:
 	python -m src.dataset.download_data
 
 #-----------------Target to run the model pipeline------------------
-
-# ML=rf or ML=logr
-
 # Preprocess the data
 preprocess:
-ifeq ($(ML),rf)
-	python -m src.preprocessing.data_preprocessing_RF
-else ifeq ($(ML),logr)
-	python -m src.preprocessing.data_preprocessing_LogR
-endif
+	python -m src.preprocessing.data_preprocessing
 
 # Train model
-train:
-ifeq ($(ML),rf)
-	python -m src.models.RandomForest
-else ifeq ($(ML),logr)
-	python -m src.preprocessing.data_preprocessing_LogR
-endif
+train.%: # Ex: make train.RandomForest (correct model name)
+	python -m src.models.$*
 
 # Evaluate model
 evaluate:
-ifeq ($(ML),rf)
-	python -m src.evaluate.evaluate_RF
-else ifeq ($(ML),logr)
-	python -m src.evaluate.evaluate_LogR
-endif
+	python -m src.evaluate.evaluate
 
 # Review evaluated model prediction
 predict:
-ifeq ($(ML),rf)
-	python -m src.prediction.prediction_RF
-else ifeq ($(ML),logr)
-	python -m src.prediction.prediction_LogR
-endif
+	python -m src.prediction.prediction
 
+# Visualize evaluated model
 visualize:
-ifeq ($(ML),rf)
-	python -m src.visualization.RF_visualization
-else ifeq ($(ML),logr)
-	python -m src.visualization.LogR_visualization
-endif
+	python -m src.visualization.visualization
 
 # Run all scripts
-run-all: preprocess train evaluate predict visualize
+model ?= selected_model # Ex: make model=RandomForest run-allm
+run-all: preprocess train.$(model) evaluate predict visualize
 
 
 #--------------------------Clean---------------------------

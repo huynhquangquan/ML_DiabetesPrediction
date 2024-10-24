@@ -3,6 +3,24 @@ from pathlib import Path
 import yaml
 import pandas as pd
 import joblib
+import yaml
+
+def dataset_select(): # change dataset in config.dataset_config
+    dir = Path(__file__).parent.parent
+    with open(dir / 'config' / 'dataset_config.yaml','r') as file:
+        dataset = yaml.safe_load(file)
+    return dataset
+
+def model_select(): # every run in evaluate, prediction, visualize, will select the model to run, change model in config.model_select
+    dir = Path(__file__).parent.parent
+    with open(dir / 'config' / 'model_select.yaml','r') as file:
+        model = yaml.safe_load(file)
+    return model['model']
+
+def find_path_from_models(name): # Side function to create path in .virtualenvironment.models
+    dir = Path(__file__).parent
+    model_path = dir / '..' / "models" / f'{name}'
+    return model_path.resolve()
 
 def check_model(name):
     if "random" in name.lower() and "forest" in name.lower():
@@ -33,11 +51,6 @@ def check_processed():
         print(f'Processed không có hoặc không đầy đủ')
         return False
     return True
-
-def find_path_from_models(name):
-    dir = Path(__file__).parent
-    model_path = dir / '..' / "models" / f'{name}'
-    return model_path.resolve()
 
 def read_raw(datasetname):
     current_dir = Path(__file__).parent

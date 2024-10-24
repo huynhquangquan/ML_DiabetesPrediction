@@ -1,4 +1,3 @@
-# Check for duplicate data, if found, delete them.
 import pandas as pd
 from src import utilities
 from sklearn.model_selection import train_test_split
@@ -70,10 +69,11 @@ def save_data_preprocessed(df):
     print("-------Lưu hoàn tất!")
 
 if __name__ == "__main__":
+    dataset = utilities.dataset_select()['dataset']
     check_raw = bool(utilities.check_raw())
     if check_raw is False:
         raise RuntimeError("Preprocessing thất bại")
-    df = utilities.read_raw('diabetes.csv')
+    df = utilities.read_raw(dataset)
     print(df)
     check_samples(df)
     delete_duplicate_rows()

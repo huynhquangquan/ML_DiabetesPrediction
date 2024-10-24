@@ -8,21 +8,23 @@ from sklearn.model_selection import train_test_split, cross_val_score, learning_
 from sklearn.metrics import confusion_matrix, f1_score, recall_score, accuracy_score, classification_report
 
 if __name__=="__main__":
+    model_name = utilities.model_select()
+
+
     check_processed = bool(utilities.check_processed())
-    check_model = bool(utilities.check_model("random_forest"))
+    check_model = bool(utilities.check_model(model_name))
     if check_processed is False and check_model is False:
         raise RuntimeError("Visualize RF thất bại")
 
-    # Load processed data and model
-    # train = utilities.read_processed("train.csv")
+    # Load processed test data and model
     test = utilities.read_processed("test.csv")
-    # X_train = train.drop(columns=["Outcome"])
-    # y_train = train["Outcome"]
     X_test = test.drop(columns=["Outcome"])
     y_test = test["Outcome"]
-    model = utilities.joblib_load("random_forest")
+    model = utilities.joblib_load(model_name)
 
+    # Create pred variable
     y_pred = model.predict(X_test)
+
     # Create classification report for Random Forest
     report = classification_report(y_test, y_pred, output_dict=True)
 

@@ -1,0 +1,4 @@
+# Dataset
+dataset: "diabetes.csv"
+# Source Path
+source: "mathchi/diabetes-data-set"
