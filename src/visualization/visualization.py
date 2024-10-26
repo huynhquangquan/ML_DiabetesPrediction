@@ -10,7 +10,6 @@ from sklearn.metrics import confusion_matrix, f1_score, recall_score, accuracy_s
 if __name__=="__main__":
     model_name = utilities.model_select()
 
-
     check_processed = bool(utilities.check_processed())
     check_model = bool(utilities.check_model(model_name))
     if check_processed is False and check_model is False:

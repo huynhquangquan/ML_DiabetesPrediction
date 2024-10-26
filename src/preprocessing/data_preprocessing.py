@@ -3,44 +3,22 @@ from src import utilities
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 from src import features_engineering
+from imblearn.over_sampling import SMOTE
+import logging
+import numpy as np
 
 def check_samples(df):
     num_samples = df.shape[0]
     print("-------Số lượng mẫu trong df hiện tại là:", num_samples)
 
-def delete_duplicate_rows():
+def delete_duplicate_rows(df):
     duplicated_rows = df[df.duplicated()]
     print("-------Các dòng trùng lặp:")
     print(duplicated_rows)
     # Delete duplicate rows
     df_cleaned = df.drop_duplicates()
     print("-------Xóa dữ liệu lặp hoàn tất!")
-
-
-def replace_missing_values():
-    numerical_features = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
-                          'BMI', 'DiabetesPedigreeFunction', 'Age']
-    # Check
-    missing_data = df[numerical_features].isnull().sum()
-    print("-------Dữ liệu bị thiếu:")
-    print(missing_data)
-    # Replace
-    df[numerical_features] = df[numerical_features].fillna(df[numerical_features].median())
-
-    # Including Zero values
-    # Check
-    cols = df[['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']]
-    for col in cols:
-        zero_values = len(df[df[col] <= 0])
-        print("-------Các cột có dữ liệu bằng 0 hoặc dưới 0 của thuộc tính {} là {}".format(col, zero_values))
-
-    # Replace
-    cols = df[['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']]
-    for col in cols:
-        df[col] = df[col].astype(float) # Convert to float to avoid FutureWarning, eventhough it does not affect the progress
-        median = df[col].median()
-        df.loc[df[col] <= 0, col] = median
-    print("-------Điền giá trị thiếu hoàn tất!")
+    return df_cleaned
 
 def remove_outliers(df):
     numerical_features = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
@@ -56,35 +34,136 @@ def remove_outliers(df):
     print("-------Loại bỏ giá trị ngoại lai hoàn tất!")
     return df_clean
 
-def save_data_preprocessed(df):
-    # Split to train and test data
-    train,test = train_test_split(df, test_size=0.25, random_state=42)
-    print("-------Chia dữ liệu thành train data và test data thành công")
+def balance_train(df):
+    smote = SMOTE(random_state=42)
+    X = df.drop(columns=['Outcome'])
+    y = df['Outcome']
+    X_train, y_train = smote.fit_resample(X,y)
 
+    # Merge X and y to a single Dataframe
+    balanced_train = pd.concat([pd.DataFrame(X_train,columns=X.columns), pd.DataFrame(y_train, columns=['Outcome'])],axis=1)
+
+    return balanced_train
+
+def split_data(df):
+    # Split to train and test data
+    train,test = train_test_split(df, test_size=0.2, random_state=42)
+    print("-------Chia dữ liệu thành train data và test data thành công")
+    return train,test
+
+def save_data_preprocessed(train,test):
     Base_dir = Path(__file__).parent.parent
     # NOTE: A must whenever saving processed data, index always False, else it will include index as a column in data
     train.to_csv(Base_dir / '..' / 'data' / 'processed' / 'train.csv',index=False)
-    test.to_csv(Base_dir / '..' / 'data' / 'processed' / 'test.csv',index=False)
-    print("-------Lưu data sau khi xử lý")
+    test.to_csv(Base_dir / '..' / 'data' / 'processed' / 'test.csv', index=False)
+    print("-------Lưu data huấn luyện sau khi xử lý")
     print("-------Lưu hoàn tất!")
 
 if __name__ == "__main__":
+    imputation_select = utilities.imputation_select()
     dataset = utilities.dataset_select()['dataset']
     check_raw = bool(utilities.check_raw())
+
     if check_raw is False:
         raise RuntimeError("Preprocessing thất bại")
+
+    # Preprocess dataset
+    print("======================Dataset==============================================================================================================")
     df = utilities.read_raw(dataset)
+    print("Dữ liệu dataset:")
     print(df)
     check_samples(df)
-    delete_duplicate_rows()
-    replace_missing_values()
-    df_processed = remove_outliers(df)
-    check_samples(df_processed)
-    removing_features = features_engineering.check_correlation(df_processed,0.8)
-    df_preprocessed = features_engineering.remove_features(df_processed, removing_features)
+    print("----------------------Xóa dữ liệu lặp--------------------------------------------------------------------------------------------------------------")
+
+    df = delete_duplicate_rows(df)
+    print("Dữ liệu dataset sau khi xóa dữ liệu lặp:")
+    print(df)
+    check_samples(df)
+    print("----------------------Chia dữ liệu--------------------------------------------------------------------------------------------------------------")
+
+    train,test = split_data(df) # Get train data, save test data
+    print("Dữ liệu huấn luyện:")
+    print(train)
+    check_samples(train)
+
+    print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
+    try:
+        impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
+        imputation_df = impute_function(df)
+    except Exception as e:
+        print(f"Chưa chọn imputation: {e}")
+    print("Dữ liệu huấn luyện sau khi điền:")
+    print(imputation_df)
+    check_samples(imputation_df)
+
+    print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
+    rmoutliers_df = remove_outliers(imputation_df)
+    print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
+    print(rmoutliers_df)
+    check_samples(rmoutliers_df)
+
+    removing_features = features_engineering.check_correlation(rmoutliers_df,0.8)
+    features_engineered_df = features_engineering.remove_features(rmoutliers_df, removing_features)
+
+    dfpr_dir = Path(__file__).parent.parent
+    features_engineered_df.to_csv(dfpr_dir / '..' / 'data' / 'processed' / dataset, index=False)
+
+    # Preprocess Train set
+    print("======================Train==============================================================================================================")
+    features_engineered_train = features_engineering.remove_features(train, removing_features)
+    print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
+    try:
+        impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
+        imputation_train = impute_function(features_engineered_train)
+    except Exception as e:
+        print(f"Chưa chọn imputation: {e}")
+    print("Dữ liệu huấn luyện sau khi điền:")
+    print(imputation_train)
+    check_samples(imputation_train)
+
+    print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
+    rmoutliers_train = remove_outliers(imputation_train)
+    print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
+    print(rmoutliers_train)
+    check_samples(rmoutliers_train)
+
+    # print("----------------------Cân bằng huấn luyện--------------------------------------------------------------------------------------------------------------")
+    # balanced_train = balance_train(imputation_train)
+    # print("Dữ liệu huấn luyện sau SMOTE:")
+    # print(balanced_train)
+    # check_samples(balanced_train)
+
+    final_train = rmoutliers_train
+
+    # Preprocess Test set
+    print("======================TEST==============================================================================================================")
+    features_engineered_test = features_engineering.remove_features(test, removing_features)
+    print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
+    try:
+        impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
+        imputation_test = impute_function(features_engineered_test)
+    except Exception as e:
+        print(f"Chưa chọn imputation: {e}")
+    print("Dữ liệu huấn luyện sau khi điền:")
+    print(imputation_test)
+    check_samples(imputation_test)
+
+    print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
+    rmoutliers_test = remove_outliers(imputation_test)
+    print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
+    print(rmoutliers_test)
+    check_samples(rmoutliers_test)
+
+    final_test = rmoutliers_test
+
+    # Save Data
+    print("====================================================================================================================================")
     print("-------Dataset sau khi xử lý: ")
-    print(df_preprocessed)
-    save_data_preprocessed(df_preprocessed)
+    print("TRAIN SET:")
+    print(final_train)
+    print("TEST SET")
+    print(final_test)
+    save_data_preprocessed(final_train,final_test)
 
 
 

@@ -4,6 +4,15 @@ import yaml
 import pandas as pd
 import joblib
 import yaml
+import importlib
+from sklearn.preprocessing import StandardScaler
+
+# Read YAML
+def imputation_select():
+    dir = Path(__file__).parent.parent
+    with open(dir / 'config' / 'imputation_select.yaml','r') as file:
+        imputation = yaml.safe_load(file)
+    return imputation['method']
 
 def dataset_select(): # change dataset in config.dataset_config
     dir = Path(__file__).parent.parent
@@ -17,21 +26,28 @@ def model_select(): # every run in evaluate, prediction, visualize, will select 
         model = yaml.safe_load(file)
     return model['model']
 
+# Function
+def dynamic_import_imputation(imputation_method):
+    try:
+        # Dynamically import the imputation method from the src.preprocessing.imputation module
+        module = importlib.import_module(f'src.preprocessing.imputation.{imputation_method}')
+        impute_function = getattr(module, 'replace_missing_values')
+        return impute_function
+    except ModuleNotFoundError as e:
+        raise ImportError(f"Module not found for {imputation_method}: {e}")
+    except AttributeError as e:
+        raise ImportError(f"Function replace_missing_values not found for {imputation_method}: {e}")
+
 def find_path_from_models(name): # Side function to create path in .virtualenvironment.models
     dir = Path(__file__).parent
     model_path = dir / '..' / "models" / f'{name}'
     return model_path.resolve()
 
 def check_model(name):
-    if "random" in name.lower() and "forest" in name.lower():
-        model = "random_forest"
-    if "logistic" in name.lower():
-        model = "logistic"
-
     try:
-        check_models = joblib_load(model)
+        check_models = joblib_load(name)
     except:
-        print(f'Không có mô hình {model}')
+        print(f'Không có mô hình {name}')
         return False
     return True
 
@@ -63,6 +79,11 @@ def read_processed(datasetname):
     model_path = current_dir / '..' / 'data' / 'processed' / f'{datasetname}'
     df = pd.read_csv(model_path.resolve())
     return df
+
+def scaling(X):
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X)
+    return X_train_scaled
 
 def joblib_dump(model,name):
     model_path = find_path_from_models(name)

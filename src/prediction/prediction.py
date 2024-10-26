@@ -7,7 +7,7 @@ import numpy as np
 
 if __name__=="__main__":
     model_name = utilities.model_select()
-
+    dataset = utilities.dataset_select()['dataset']
 
     check_raw = bool(utilities.check_raw())
     check_model = bool(utilities.check_model(model_name))
@@ -16,7 +16,7 @@ if __name__=="__main__":
 
     # Load data-samples data and model
     model = utilities.joblib_load(model_name)
-    data_samples = utilities.read_raw("diabetes.csv")
+    data_samples = utilities.read_processed(dataset)
     # Shuffle before defining X and y
     data_samples = data_samples.sample(frac=1)
 

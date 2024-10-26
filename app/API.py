@@ -30,13 +30,7 @@ def API():
     )  # Connect HTML
 
     # Must be rf or logr according to the project
-    name = input("Nhập model dự đoán: ")
-    if "random" in name.lower() and "forest" in name.lower() or name.lower() == "rf":
-        name = "random_forest"
-    elif "logistic" in name.lower() or name.lower() == "logr":
-        name = "logistic"
-    else:
-        return None
+    name = utilities.model_select()
 
     # Check whether the model exist or not
     check = bool(utilities.check_model(name))
