@@ -73,18 +73,23 @@ if __name__ == "__main__":
     print("Dữ liệu dataset:")
     print(df)
     check_samples(df)
-    print("----------------------Xóa dữ liệu lặp--------------------------------------------------------------------------------------------------------------")
+    removing_features = features_engineering.check_correlation(df,0.8)
+    df = features_engineering.remove_features(df, removing_features)
 
+    print("----------------------Xóa dữ liệu lặp--------------------------------------------------------------------------------------------------------------")
     df = delete_duplicate_rows(df)
     print("Dữ liệu dataset sau khi xóa dữ liệu lặp:")
     print(df)
     check_samples(df)
-    print("----------------------Chia dữ liệu--------------------------------------------------------------------------------------------------------------")
 
+    print("----------------------Chia dữ liệu--------------------------------------------------------------------------------------------------------------")
     train,test = split_data(df) # Get train data, save test data
     print("Dữ liệu huấn luyện:")
     print(train)
     check_samples(train)
+    print("Dữ liệu test:")
+    print(test)
+    check_samples(test)
 
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
     try:
@@ -102,19 +107,15 @@ if __name__ == "__main__":
     print(rmoutliers_df)
     check_samples(rmoutliers_df)
 
-    removing_features = features_engineering.check_correlation(rmoutliers_df,0.8)
-    features_engineered_df = features_engineering.remove_features(rmoutliers_df, removing_features)
-
     dfpr_dir = Path(__file__).parent.parent
-    features_engineered_df.to_csv(dfpr_dir / '..' / 'data' / 'processed' / dataset, index=False)
+    rmoutliers_df.to_csv(dfpr_dir / '..' / 'data' / 'processed' / dataset, index=False)
 
     # Preprocess Train set
     print("======================Train==============================================================================================================")
-    features_engineered_train = features_engineering.remove_features(train, removing_features)
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
     try:
         impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
-        imputation_train = impute_function(features_engineered_train)
+        imputation_train = impute_function(train)
     except Exception as e:
         print(f"Chưa chọn imputation: {e}")
     print("Dữ liệu huấn luyện sau khi điền:")
@@ -137,11 +138,10 @@ if __name__ == "__main__":
 
     # Preprocess Test set
     print("======================TEST==============================================================================================================")
-    features_engineered_test = features_engineering.remove_features(test, removing_features)
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
     try:
         impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
-        imputation_test = impute_function(features_engineered_test)
+        imputation_test = impute_function(test)
     except Exception as e:
         print(f"Chưa chọn imputation: {e}")
     print("Dữ liệu huấn luyện sau khi điền:")

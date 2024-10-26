@@ -41,7 +41,7 @@ if __name__=="__main__":
 
     results = pd.DataFrame({
         "Model": ["RandomForestClassifier"],
-        "Accuracy on External": [f'{accuracy*100:.2f}%'],
+        "Accuracy on Processed Dataset": [f'{accuracy*100:.2f}%'],
         "Accuracy on Not Diabetes": [f'{accuracy_on_neg*100:.2f}%'],
         "Accuracy on Diabetes": [f'{accuracy_on_pos*100:.2f}%']
     })

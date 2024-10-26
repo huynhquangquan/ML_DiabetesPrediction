@@ -1,2 +1,2 @@
-Model,Accuracy on External,Accuracy on Not Diabetes,Accuracy on Diabetes
+Model,Accuracy on Processed Dataset,Accuracy on Not Diabetes,Accuracy on Diabetes
 RandomForestClassifier,88.46%,94.35%,75.26%
