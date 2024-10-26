@@ -36,6 +36,6 @@ if __name__ == "__main__":
     random_search.fit(X_train, y_train)
     print("Best parameters:", random_search.best_params_)
 
-    utilities.joblib_dump(random_search.best_estimator_,'logistic')
+    utilities.joblib_dump(random_search.best_estimator_,'Logistic')
 
     print("-------Lưu mô hình Logistic hoàn tất")

@@ -12,7 +12,7 @@ if __name__=="__main__":
     check_raw = bool(utilities.check_raw())
     check_model = bool(utilities.check_model(model_name))
     if check_raw is False and check_model is False:
-        raise RuntimeError("Prediction RF thất bại")
+        raise RuntimeError("Prediction thất bại")
 
     # Load data-samples data and model
     model = utilities.joblib_load(model_name)
@@ -47,5 +47,5 @@ if __name__=="__main__":
     })
 
     dir = Path(__file__).parent.parent
-    results.to_csv(dir / '..' / 'results' / 'reports' / 'PredvsData_RF.csv',index=False)
-    print("-----Đã lưu PredvsData_RF")
+    results.to_csv(dir / '..' / 'results' / 'reports' / f'PredvsData_{model_name}.csv',index=False)
+    print("-----Đã lưu PredvsData")

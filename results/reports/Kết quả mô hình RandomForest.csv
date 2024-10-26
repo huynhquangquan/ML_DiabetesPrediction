@@ -1,2 +1,2 @@
 Model,Average(CV) Accuracy,Accuracy on Test,Precision,Recall,F1-score
-RandomForestClassifier,0.78,0.80,0.69,0.69,0.69
+RandomForest,0.78,0.80,0.69,0.69,0.69

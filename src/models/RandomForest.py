@@ -51,6 +51,6 @@ if __name__ == "__main__":
     random_search.fit(X_train, y_train)
     print("Best parameters:", random_search.best_params_)
 
-    utilities.joblib_dump(random_search.best_estimator_,'random_forest')
+    utilities.joblib_dump(random_search.best_estimator_,'RandomForest')
 
-    print("-------Lưu mô hình Random Forest hoàn tất")
+    print("-------Lưu mô hình RandomForest hoàn tất")

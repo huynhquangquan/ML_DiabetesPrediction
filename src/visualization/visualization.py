@@ -13,7 +13,7 @@ if __name__=="__main__":
     check_processed = bool(utilities.check_processed())
     check_model = bool(utilities.check_model(model_name))
     if check_processed is False and check_model is False:
-        raise RuntimeError("Visualize RF thất bại")
+        raise RuntimeError("Visualize thất bại")
 
     # Load processed test data and model
     test = utilities.read_processed("test.csv")
@@ -38,7 +38,7 @@ if __name__=="__main__":
     plt.title('Báo cáo phân loại - Random Forest')
 
     dir = Path(__file__).parent.parent
-    plt.savefig((dir / '..' / 'results' / 'figures' / 'Báo cáo phân loại - Random Forest.png').resolve())
+    plt.savefig((dir / '..' / 'results' / 'figures' / f'Báo cáo phân loại - {model_name}.png').resolve())
     print("-----Đã lưu figure báo cáo phân loại RF")
     plt.close()
 
@@ -49,7 +49,7 @@ if __name__=="__main__":
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.title('Dự đoán kết quả - Random Forest')
-    plt.savefig((dir / '..' / 'results' / 'figures' / 'Ma trận nhầm lẫn - Random Forest.png').resolve())
+    plt.savefig((dir / '..' / 'results' / 'figures' / f'Ma trận nhầm lẫn - {model_name}.png').resolve())
     print("-----Đã lưu figure Ma trận nhầm lẫn RF")
     plt.close()
     # Accuracy: (True Positives + True Negatives) / Total instances

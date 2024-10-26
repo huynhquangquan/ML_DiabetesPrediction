@@ -47,7 +47,7 @@ if __name__ == "__main__":
     ResultTable = pd.DataFrame(columns= ["Model","Average(CV) Accuracy","Accuracy on Test","Precision","Recall","F1-score"])
 
     ResultTable = pd.DataFrame({
-        "Model": ["RandomForestClassifier"],
+        "Model": [model_name],
         "Average(CV) Accuracy": f'{scores.mean():.2f}',
         "Accuracy on Test": f'{accuracy:.2f}',
         "Precision": f'{precision:.2f}',
@@ -55,5 +55,5 @@ if __name__ == "__main__":
         "F1-score": f'{f1:.2f}'
     })
 
-    ResultTable.to_csv(base_dir/'results/reports/Kết quả mô hình RF.csv', index=False)
-    print("-----Đã lưu kết quả mô hình RF")
+    ResultTable.to_csv(base_dir/f'results/reports/Kết quả mô hình {model_name}.csv', index=False)
+    print("-----Đã lưu kết quả mô hình")
