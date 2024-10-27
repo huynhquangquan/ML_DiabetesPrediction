@@ -9,7 +9,7 @@ import numpy as np
 
 if __name__ == "__main__":
     model_name = utilities.model_select()
-
+    scaling = utilities.scaling_config()
     check_processed = utilities.check_processed()
     check_model = utilities.check_model(model_name)
     if check_processed is False and check_model is False:
@@ -23,6 +23,11 @@ if __name__ == "__main__":
     y_train = train['Outcome']
     X_test = test.drop(columns=['Outcome'])
     y_test = test['Outcome']
+    if scaling == "enable":
+        X_train_scaled, X_test_scaled = utilities.scaling(X_train, X_test)
+        # Convert X_scaled back to a DataFrame
+        X_train = pd.DataFrame(X_train_scaled, columns=X_train.columns)
+        X_test = pd.DataFrame(X_test_scaled, columns=X_test.columns)
     print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
     model = utilities.joblib_load(model_name)
 
@@ -37,11 +42,11 @@ if __name__ == "__main__":
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test,y_pred)
-    print(f'Average(CV) Accuracy: {scores.mean():.2f}')
-    print(f'Accuracy on Test: {accuracy:.2f}')
-    print(f'Precision: {precision:.2f}')
-    print(f'Recall: {recall:.2f}')
-    print(f'F1-score: {f1:.2f}')
+    print(f'Average(CV) Accuracy: {scores.mean():.4f}')
+    print(f'Accuracy on Test: {accuracy:.4f}')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1-score: {f1:.4f}')
 
     # Create table to save results
     ResultTable = pd.DataFrame(columns= ["Model","Average(CV) Accuracy","Accuracy on Test","Precision","Recall","F1-score"])

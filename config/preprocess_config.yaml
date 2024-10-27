@@ -1,0 +1,4 @@
+scaling: "disable" # Any input except "enable" will disable it
+imputation: "median" # Mustn't be blanked
+balance_method: "None" # None to not use any method
+outliers_method: "row_wise" # None to not use any method

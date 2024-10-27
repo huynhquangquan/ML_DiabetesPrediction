@@ -8,7 +8,7 @@ import numpy as np
 if __name__=="__main__":
     model_name = utilities.model_select()
     dataset = utilities.dataset_select()['dataset']
-
+    scaling = utilities.scaling_config()
     check_raw = bool(utilities.check_raw())
     check_model = bool(utilities.check_model(model_name))
     if check_raw is False and check_model is False:
@@ -23,12 +23,20 @@ if __name__=="__main__":
     X = data_samples.drop(columns=["Outcome"])
     y = data_samples["Outcome"]
 
-    # Prediction
-    pred = model.predict(X)
+    if scaling == "enable":
+        bin = X.copy()
+        X_scaled, bin = utilities.scaling(X,bin)
+        # Convert X_scaled back to a DataFrame
+        X_scaled = pd.DataFrame(X_scaled, columns=X.columns)
+
+        # Prediction
+        pred = model.predict(X_scaled)
+    else:
+        pred = model.predict(X)
+
     X['Actual'] = y
     X['Predict'] = pred
-
-    print("Pred vs External")
+    print("Pred vs Processed Dataset")
     print(X)
 
     # Count external Accuracy based on correct predict

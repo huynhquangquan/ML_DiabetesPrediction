@@ -1,0 +1,2 @@
+Model,Average(CV) Accuracy,Accuracy on Test,Precision,Recall,F1-score
+Logistic,0.76,0.76,0.68,0.62,0.65
