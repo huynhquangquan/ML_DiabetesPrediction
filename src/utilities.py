@@ -5,7 +5,8 @@ import pandas as pd
 import joblib
 import yaml
 import importlib
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import RobustScaler
+from src.preprocessing import scaler
 
 # Read YAML
 def imputation_select():
@@ -32,19 +33,42 @@ def scaling_config():
         scale = yaml.safe_load(file)
     return scale['scaling']
 
-def balance_config():
+def scaler_select():
+    dir = Path(__file__).parent.parent
+    with open(dir / 'config' / 'preprocess_config.yaml','r') as file:
+        scaler = yaml.safe_load(file)
+    return scaler['scaler']
+
+def balance_select():
     dir = Path(__file__).parent.parent
     with open(dir / 'config' / 'preprocess_config.yaml','r') as file:
         balance = yaml.safe_load(file)
     return balance['balance_method']
 
-def outliers_config():
+def outliers_select():
     dir = Path(__file__).parent.parent
     with open(dir / 'config' / 'preprocess_config.yaml','r') as file:
         outliers = yaml.safe_load(file)
     return outliers['outliers_method']
 
+def model_ensemble():
+    dir = Path(__file__).parent.parent
+    with open(dir / 'config' / 'model_select.yaml','r') as file:
+        model = yaml.safe_load(file)
+    return model['model_ensemble']['model1'], model['model_ensemble']['model2'], model['model_ensemble']['model3']
+
 # Function
+def dynamic_import_scaler(scaler_method):
+    try:
+        # Dynamically import the imputation method from the src.preprocessing.scaler module
+        module = importlib.import_module(f'src.preprocessing.scaler.{scaler_method}')
+        scaler_function = getattr(module, 'scaler')
+        return scaler_function
+    except ModuleNotFoundError as e:
+        raise ImportError(f"Module not found for {scaler_method}: {e}")
+    except AttributeError as e:
+        raise ImportError(f"Function replace_missing_values not found for {scaler_method}: {e}")
+
 def dynamic_import_imputation(imputation_method):
     try:
         # Dynamically import the imputation method from the src.preprocessing.imputation module
@@ -58,10 +82,10 @@ def dynamic_import_imputation(imputation_method):
 
 def dynamic_import_balance(balance_method):
     try:
-        # Dynamically import the imputation method from the src.preprocessing.imputation module
+        # Dynamically import the imputation method from the src.preprocessing.balance module
         module = importlib.import_module(f'src.preprocessing.balance.{balance_method}')
-        impute_function = getattr(module, 'balance_train')
-        return impute_function
+        balance_function = getattr(module, 'balance_train')
+        return balance_function
     except ModuleNotFoundError as e:
         raise ImportError(f"Module not found for {balance_method}: {e}")
     except AttributeError as e:
@@ -69,10 +93,10 @@ def dynamic_import_balance(balance_method):
 
 def dynamic_import_outliers(outliers_method):
     try:
-        # Dynamically import the imputation method from the src.preprocessing.imputation module
+        # Dynamically import the imputation method from the src.preprocessing.scaler module
         module = importlib.import_module(f'src.preprocessing.outliers.{outliers_method}')
-        impute_function = getattr(module, 'remove_outliers')
-        return impute_function
+        outliers_function = getattr(module, 'remove_outliers')
+        return outliers_function
     except ModuleNotFoundError as e:
         raise ImportError(f"Module not found for {outliers_method}: {e}")
     except AttributeError as e:
@@ -91,9 +115,9 @@ def check_model(name):
         return False
     return True
 
-def check_raw():
+def check_raw(dataset):
     try:
-        check_raw = read_raw("diabetes.csv")
+        check_raw = read_raw(dataset)
     except:
         print(f'Chưa có dataset')
         return False
@@ -108,6 +132,20 @@ def check_processed():
         return False
     return True
 
+def check_external():
+    try:
+        check_external = read_external()
+    except:
+        print(f'External không có')
+        return False
+    return True
+
+def read_external():
+    current_dir = Path(__file__).parent
+    model_path = current_dir / '..' / 'data' / 'external' / 'external.csv'
+    df = pd.read_csv(model_path.resolve())
+    return df
+
 def read_raw(datasetname):
     current_dir = Path(__file__).parent
     model_path = current_dir / '..' / 'data' / 'raw' / f'{datasetname}'
@@ -121,10 +159,15 @@ def read_processed(datasetname):
     return df
 
 def scaling(X_train, X_test):
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-    return X_train_scaled, X_test_scaled
+    scaler_selection = scaler_select()
+    try:
+        scaler_function = dynamic_import_scaler(scaler_selection)
+        X_train_scaled, X_test_scaled = scaler_function(X_train, X_test)
+        X_train = pd.DataFrame(X_train_scaled,columns=X_train.columns)
+        X_test = pd.DataFrame(X_test_scaled,columns=X_test.columns)
+        return X_train, X_test
+    except Exception as e:
+        print(f"Chưa chọn scaler: {e}")
 
 def joblib_dump(model,name):
     model_path = find_path_from_models(name)

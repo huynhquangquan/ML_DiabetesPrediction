@@ -1,0 +1,2 @@
+Model,Average(CV) ROC_AUC,Average(CV) Accuracy,Accuracy on Test,Precision,Recall,F1-score,Imputation,Outliers,Balance,Scaling
+CatBoost,0.84,0.78,0.79,0.59,0.69,0.63,mean,row_wise,None,None

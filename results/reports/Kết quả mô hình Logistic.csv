@@ -1,2 +1,2 @@
-Model,Average(CV) Accuracy,Accuracy on Test,Precision,Recall,F1-score
-Logistic,0.76,0.76,0.68,0.62,0.65
+Model,Average(CV) ROC_AUC,Average(CV) Accuracy,Accuracy on Test,Precision,Recall,F1-score,Imputation,Outliers,Balance,Scaling
+Logistic,0.85,0.79,0.75,0.60,0.62,0.61,KNN,attribute_wise,None,None

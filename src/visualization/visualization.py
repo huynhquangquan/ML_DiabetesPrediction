@@ -9,10 +9,10 @@ from sklearn.metrics import confusion_matrix, f1_score, recall_score, accuracy_s
 
 if __name__=="__main__":
     model_name = utilities.model_select()
-
+    scaling = utilities.scaling_config()
     check_processed = bool(utilities.check_processed())
     check_model = bool(utilities.check_model(model_name))
-    if check_processed is False and check_model is False:
+    if check_processed is False or check_model is False:
         raise RuntimeError("Visualize thất bại")
 
     # Load processed test data and model
@@ -20,6 +20,11 @@ if __name__=="__main__":
     X_test = test.drop(columns=["Outcome"])
     y_test = test["Outcome"]
     model = utilities.joblib_load(model_name)
+
+    if scaling == "enable":
+        bin = X_test.copy()
+        bin, X_test = utilities.scaling(bin, X_test)
+        bin = None
 
     # Create pred variable
     y_pred = model.predict(X_test)
@@ -35,11 +40,11 @@ if __name__=="__main__":
     sns.heatmap(data_array, annot=True, fmt=".2f", xticklabels=['Precision', 'Recall', 'F1-score'], yticklabels=labels, cmap='Blues')
     plt.xlabel('Chỉ số')
     plt.ylabel('Lớp')
-    plt.title('Báo cáo phân loại - Random Forest')
+    plt.title(f'Báo cáo phân loại - {model_name}')
 
     dir = Path(__file__).parent.parent
     plt.savefig((dir / '..' / 'results' / 'figures' / f'Báo cáo phân loại - {model_name}.png').resolve())
-    print("-----Đã lưu figure báo cáo phân loại RF")
+    print("-----Đã lưu figure báo cáo phân loại")
     plt.close()
 
     # Visualize confusion matrix of prediction by drawing heatmap
@@ -48,9 +53,9 @@ if __name__=="__main__":
     sns.heatmap(cm,annot=True,fmt='d',cbar=False,cmap='Blues', xticklabels=[0,1], yticklabels=[0,1])
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
-    plt.title('Dự đoán kết quả - Random Forest')
+    plt.title(f'Dự đoán kết quả - {model_name}')
     plt.savefig((dir / '..' / 'results' / 'figures' / f'Ma trận nhầm lẫn - {model_name}.png').resolve())
-    print("-----Đã lưu figure Ma trận nhầm lẫn RF")
+    print("-----Đã lưu figure Ma trận nhầm lẫn")
     plt.close()
     # Accuracy: (True Positives + True Negatives) / Total instances
     # Precision for class 1: True Positives / (True Positives + False Positives)

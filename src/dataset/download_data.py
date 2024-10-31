@@ -8,7 +8,7 @@ def download_raw():
     source = utilities.dataset_select()['source']
 
     # Download the dataset to the custom path
-    check_raw = bool(utilities.check_raw())
+    check_raw = bool(utilities.check_raw(dataset))
     path = kagglehub.dataset_download(source)
     print("Đường dẫn dataset được tải về:", path)
     path_modified = Path(path) / dataset # path is currently a string, need Path to convert it to true Path else str error will appear

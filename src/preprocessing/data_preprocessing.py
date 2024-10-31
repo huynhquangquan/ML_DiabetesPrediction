@@ -35,10 +35,10 @@ def save_data_preprocessed(train,test):
 
 if __name__ == "__main__":
     imputation_select = utilities.imputation_select()
-    balance_config = utilities.balance_config()
-    outliers_config = utilities.outliers_config()
+    balance_select = utilities.balance_select()
+    outliers_select = utilities.outliers_select()
     dataset = utilities.dataset_select()['dataset']
-    check_raw = bool(utilities.check_raw())
+    check_raw = bool(utilities.check_raw(dataset))
 
     if check_raw is False:
         raise RuntimeError("Preprocessing thất bại")
@@ -70,20 +70,22 @@ if __name__ == "__main__":
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
     try:
         impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
-        imputation_df = impute_function(df)
+        imputation_df, bin = impute_function(df, df.copy())
+        bin = None
     except Exception as e:
         print(f"Chưa chọn imputation: {e}")
     print("Dữ liệu huấn luyện sau khi điền:")
     print(imputation_df)
     check_samples(imputation_df)
 
-    if outliers_config == "None":
+    if outliers_select == "None":
         dfpr_dir = Path(__file__).parent.parent
         imputation_df.to_csv(dfpr_dir / '..' / 'data' / 'processed' / dataset, index=False)
     else:
         print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
-        outliers_function = utilities.dynamic_import_outliers(outliers_config)  # Dynamically get the imputation function
-        rmoutliers_df = outliers_function(imputation_df)
+        outliers_function = utilities.dynamic_import_outliers(outliers_select)  # Dynamically get the imputation function
+        rmoutliers_df, bin = outliers_function(imputation_df, imputation_df.copy())
+        bin = None
         print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
         print(rmoutliers_df)
         check_samples(rmoutliers_df)
@@ -95,30 +97,32 @@ if __name__ == "__main__":
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
     try:
         impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
-        imputation_train = impute_function(train)
+        imputation_train, imputation_test = impute_function(train, test)
     except Exception as e:
         print(f"Chưa chọn imputation: {e}")
     print("Dữ liệu huấn luyện sau khi điền:")
     print(imputation_train)
     check_samples(imputation_train)
     final_train = imputation_train
+    final_test = imputation_test
 
-    if outliers_config == "None":
+    if outliers_select == "None":
         pass
     else:
         print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
-        outliers_function = utilities.dynamic_import_outliers(outliers_config)  # Dynamically get the outliers function
-        rmoutliers_train = outliers_function(final_train)
+        outliers_function = utilities.dynamic_import_outliers(outliers_select)  # Dynamically get the outliers function
+        rmoutliers_train, rmoutliers_test = outliers_function(final_train, final_test)
         print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
         print(rmoutliers_train)
         check_samples(rmoutliers_train)
         final_train = rmoutliers_train
+        final_test = rmoutliers_test
 
-    if balance_config == "None":
+    if balance_select == "None":
         pass
     else:
         print("----------------------Cân bằng huấn luyện--------------------------------------------------------------------------------------------------------------")
-        balance_function = utilities.dynamic_import_balance(balance_config)  # Dynamically get the balance function
+        balance_function = utilities.dynamic_import_balance(balance_select)  # Dynamically get the balance function
         balanced_train = balance_function(final_train)
         print("Dữ liệu huấn luyện sau SMOTE:")
         print(balanced_train)
@@ -128,27 +132,17 @@ if __name__ == "__main__":
     # Preprocess Test set
     print("======================TEST==============================================================================================================")
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
-    try:
-        impute_function = utilities.dynamic_import_imputation(imputation_select)  # Dynamically get the imputation function
-        imputation_test = impute_function(test)
-    except Exception as e:
-        print(f"Chưa chọn imputation: {e}")
-    print("Dữ liệu huấn luyện sau khi điền:")
+    print("Dữ liệu huấn luyện sau khi điền:") # Test is already been transformed when fit imputating Train data.
     print(imputation_test)
     check_samples(imputation_test)
 
-    final_test = imputation_test
-
-    if outliers_config == "None":
+    if outliers_select == "None":
         pass
     else:
         print("----------------------Xử lý giá trị ngoại lai--------------------------------------------------------------------------------------------------------------")
-        outliers_function = utilities.dynamic_import_outliers(outliers_config)  # Dynamically get the imputation function
-        rmoutliers_test = outliers_function(final_test)
         print("Dữ liệu huấn luyện sau khi loại bỏ ngoại lai:")
         print(rmoutliers_test)
         check_samples(rmoutliers_test)
-        final_test = rmoutliers_test
 
     # Save Data
     print("====================================================================================================================================")

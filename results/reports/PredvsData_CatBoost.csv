@@ -1,0 +1,4 @@
+CatBoost,Processed,Raw,External
+Accuracy on Dataset,92.55%,80.99%,84.42%
+Accuracy on Not Diabetes,95.28%,91.20%,92.09%
+Accuracy on Diabetes,86.11%,61.94%,66.67%

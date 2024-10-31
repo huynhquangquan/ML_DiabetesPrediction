@@ -12,7 +12,7 @@ if __name__ == "__main__":
     scaling = utilities.scaling_config()
     check_processed = utilities.check_processed()
     check_model = utilities.check_model(model_name)
-    if check_processed is False and check_model is False:
+    if check_processed is False or check_model is False:
         raise RuntimeError("Evaluate thất bại")
 
     # Load data and model
@@ -24,10 +24,7 @@ if __name__ == "__main__":
     X_test = test.drop(columns=['Outcome'])
     y_test = test['Outcome']
     if scaling == "enable":
-        X_train_scaled, X_test_scaled = utilities.scaling(X_train, X_test)
-        # Convert X_scaled back to a DataFrame
-        X_train = pd.DataFrame(X_train_scaled, columns=X_train.columns)
-        X_test = pd.DataFrame(X_test_scaled, columns=X_test.columns)
+        X_train, X_test = utilities.scaling(X_train, X_test)
     print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
     model = utilities.joblib_load(model_name)
 
@@ -35,29 +32,34 @@ if __name__ == "__main__":
     y_pred = model.predict(X_test)
 
     # Evaluate model with cross_validation
-    scores = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1)
+    scores_auc = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1, scoring= "roc_auc")
+    scores_accuracy = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1, scoring= "accuracy")
 
     # Evaluate model on test data
     accuracy = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test,y_pred)
-    print(f'Average(CV) Accuracy: {scores.mean():.4f}')
+    print(f'Average(CV) ROC_AUC: {scores_auc.mean():.4f}')
+    print(f'Average(CV) Accuracy: {scores_accuracy.mean():.4f}')
     print(f'Accuracy on Test: {accuracy:.4f}')
     print(f'Precision: {precision:.4f}')
     print(f'Recall: {recall:.4f}')
     print(f'F1-score: {f1:.4f}')
 
     # Create table to save results
-    ResultTable = pd.DataFrame(columns= ["Model","Average(CV) Accuracy","Accuracy on Test","Precision","Recall","F1-score"])
-
     ResultTable = pd.DataFrame({
         "Model": [model_name],
-        "Average(CV) Accuracy": f'{scores.mean():.2f}',
+        "Average(CV) ROC_AUC": f'{scores_auc.mean():.2f}',
+        "Average(CV) Accuracy": f'{scores_accuracy.mean():.2f}',
         "Accuracy on Test": f'{accuracy:.2f}',
         "Precision": f'{precision:.2f}',
         "Recall": f'{recall:.2f}',
-        "F1-score": f'{f1:.2f}'
+        "F1-score": f'{f1:.2f}',
+        "Imputation": f'{utilities.imputation_select()}',
+        "Outliers": f'{utilities.outliers_select()}',
+        "Balance": f'{utilities.balance_select()}',
+        "Scaling": f'{utilities.scaler_select()}' if scaling == "enable" else 'None'
     })
 
     ResultTable.to_csv(base_dir/f'results/reports/Kết quả mô hình {model_name}.csv', index=False)

@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 
 if __name__ == "__main__":
-    warnings.filterwarnings('ignore')
+    # warnings.filterwarnings('ignore')
     scaling = utilities.scaling_config()
     # Split train data
     base_dir = Path(__file__).parent.parent
@@ -23,38 +23,35 @@ if __name__ == "__main__":
 
     if scaling == "enable":
         bin = X_train.copy()
-        # Convert X_train_scaled back to a DataFrame
-        X_train_scaled, bin = utilities.scaling(X_train, bin)
-        X_train = pd.DataFrame(X_train_scaled, columns=X_train.columns)
+        X_train, bin = utilities.scaling(X_train, bin)
+        bin = None
 
     model = LogisticRegression(max_iter= 10000000,random_state=42)
 
     # HyperParameters
     # Define
-    solver = ["lbfgs"]
-    penalty = [None]
-    C = [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000]
-    class_weight = [{0:3,1:2}]
-    fit_intercept= [True, False, None]
-    dual= [True, False, None]
+    # solver= ["lbfgs", "newton-cg", "sag", "saga"]
+    # penalty= ["l2", None]
+    # C = [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000]
+    # class_weight = [{0:3,1:2}]
+    # fit_intercept= [True, False, None]
+    # dual= [True, False, None]
     # max_iter = np.arange(50,100)
 
+    # param_grid = {
+    #     "solver": solver,
+    #     "penalty": penalty,
+    #     "C": C,
+    #     "class_weight": class_weight,
+    #     "fit_intercept": fit_intercept,
+    #     "dual": dual
+    #     # "max_iter": max_iter
+    # }
 
-    param_grid = {
-        "solver": solver,
-        "penalty": penalty,
-        # "C": C,
-        # "class_weight": class_weight,
-        # "fit_intercept": fit_intercept,
-        # "dual": dual
-        # "max_iter": max_iter
-    }
+    # random_search = GridSearchCV(model,param_grid,cv=5,n_jobs=-1,verbose=1, error_score="raise")
 
-    random_search = GridSearchCV(model,param_grid,cv=5,n_jobs=-1,verbose=1)
+    model.fit(X_train, y_train)
 
-    random_search.fit(X_train, y_train)
-    print("Best parameters:", random_search.best_params_)
-
-    utilities.joblib_dump(random_search.best_estimator_,'Logistic')
+    utilities.joblib_dump(model,'Logistic')
 
     print("-------Lưu mô hình Logistic hoàn tất")

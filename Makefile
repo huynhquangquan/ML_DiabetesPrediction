@@ -23,17 +23,25 @@ predict:
 visualize:
 	python -m src.visualization.visualization
 
-# Run all scripts
-model ?= selected_model # Ex: make model=RandomForest run-allm
-run-all: preprocess train.$(model) evaluate predict visualize
-
+# Run combined scripts
+model ?= selected_model # Ex: make model=RandomForest run-all
+create-data: download-raw-data preprocess
+total-evaluation: train.$(model) evaluate visualize predict
+total-evaluation-plus:  preprocess train.$(model) evaluate visualize predict
 
 #--------------------------Clean---------------------------
 # Variables for Operating System
-UNIX = $(UNIX)
+UNIX = rm -rf
 WINDOW = del /Q
 
 # OS=win or OS=unix
+clear-external-data:
+ifeq ($(OS),win)
+	$(WINDOW) data\external\*
+else ifeq ($(OS),unix)
+	$(UNIX) data/external/*
+endif
+
 # Clear processed data
 clear-processed-data:
 ifeq ($(OS),win)

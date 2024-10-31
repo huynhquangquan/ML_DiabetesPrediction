@@ -9,49 +9,101 @@ if __name__=="__main__":
     model_name = utilities.model_select()
     dataset = utilities.dataset_select()['dataset']
     scaling = utilities.scaling_config()
-    check_raw = bool(utilities.check_raw())
+    check_raw = bool(utilities.check_raw(dataset))
+    check_processed = bool(utilities.check_processed())
+    check_external = bool(utilities.check_external())
     check_model = bool(utilities.check_model(model_name))
-    if check_raw is False and check_model is False:
+    if check_raw is False or check_model is False or check_processed is False or check_external is False:
         raise RuntimeError("Prediction thất bại")
 
     # Load data-samples data and model
     model = utilities.joblib_load(model_name)
-    data_samples = utilities.read_processed(dataset)
+    data_samples_processed = utilities.read_processed(dataset)
+    data_samples_raw = utilities.read_raw(dataset)
+    data_sample_external = utilities.read_external()
     # Shuffle before defining X and y
-    data_samples = data_samples.sample(frac=1)
+    data_samples_processed = data_samples_processed.sample(frac=1)
+    data_samples_external = data_sample_external.sample(frac=1)
+    data_samples_raw = data_samples_raw.sample(frac=1)
 
-    X = data_samples.drop(columns=["Outcome"])
-    y = data_samples["Outcome"]
+    X_processed = data_samples_processed.drop(columns=["Outcome"])
+    y_processed = data_samples_processed["Outcome"]
+    X_raw = data_samples_raw.drop(columns=["Outcome"])
+    y_raw = data_samples_raw["Outcome"]
+    X_external = data_samples_external.drop(columns=["Outcome"])
+    y_external = data_samples_external["Outcome"]
 
     if scaling == "enable":
-        bin = X.copy()
-        X_scaled, bin = utilities.scaling(X,bin)
-        # Convert X_scaled back to a DataFrame
-        X_scaled = pd.DataFrame(X_scaled, columns=X.columns)
+        bin = X_processed.copy()
+        X_processed_scaled, bin = utilities.scaling(X_processed,bin)
+        X_raw_scaled, bin = utilities.scaling(X_raw,bin)
+        X_external_scaled, bin = utilities.scaling(X_external,bin)
+        bin = None
 
         # Prediction
-        pred = model.predict(X_scaled)
+        pred_processed = model.predict(X_processed_scaled)
+        pred_raw = model.predict(X_raw_scaled)
+        pred_external = model.predict(X_external_scaled)
     else:
-        pred = model.predict(X)
+        pred_processed = model.predict(X_processed)
+        pred_raw = model.predict(X_raw)
+        pred_external = model.predict(X_external)
 
-    X['Actual'] = y
-    X['Predict'] = pred
+    X_processed['Actual'] = y_processed
+    X_processed['Predict'] = pred_processed
+    X_raw['Actual'] = y_raw
+    X_raw['Predict'] = pred_raw
+    X_external['Actual'] = y_external
+    X_external['Predict'] = pred_external
+
+    # Print and export results of prediction
+    # PROCESSED
     print("Pred vs Processed Dataset")
-    print(X)
+    print(X_processed)
+    accuracy_processed = (X_processed['Actual']==X_processed['Predict']).sum() / len(X_processed)
+    accuracy_on_neg_ppr = ((X_processed['Actual']==0) & (X_processed['Predict']==0)).sum()  / (X_processed['Actual']==0).sum()
+    accuracy_on_pos_ppr = ((X_processed['Actual']==1) & (X_processed['Predict']==1)).sum() / (X_processed['Actual']==1).sum()
+    print(f'Accuracy: {accuracy_processed*100:.2f}%')
+    print(f'Accuracy on Not Diabetes: {accuracy_on_neg_ppr*100:.2f}%')
+    print(f'Accuracy on Diabetes: {accuracy_on_pos_ppr*100:.2f}%')
 
-    # Count external Accuracy based on correct predict
-    accuracy = (X['Actual']==X['Predict']).sum() / len(X)
-    accuracy_on_neg = ((X['Actual']==0) & (X['Predict']==0)).sum()  / (X['Actual']==0).sum()
-    accuracy_on_pos = ((X['Actual']==1) & (X['Predict']==1)).sum() / (X['Actual']==1).sum()
-    print(f'Accuracy: {accuracy*100:.2f}%')
-    print(f'Accuracy on Not Diabetes: {accuracy_on_neg*100:.2f}%')
-    print(f'Accuracy on Diabetes: {accuracy_on_pos*100:.2f}%')
+    # RAW
+    print("Pred vs Raw Dataset")
+    print(X_raw)
+    accuracy_raw = (X_raw['Actual']==X_raw['Predict']).sum() / len(X_raw)
+    accuracy_on_neg_r = ((X_raw['Actual']==0) & (X_raw['Predict']==0)).sum()  / (X_raw['Actual']==0).sum()
+    accuracy_on_pos_r = ((X_raw['Actual']==1) & (X_raw['Predict']==1)).sum() / (X_raw['Actual']==1).sum()
+    print(f'Accuracy: {accuracy_raw*100:.2f}%')
+    print(f'Accuracy on Not Diabetes: {accuracy_on_neg_r*100:.2f}%')
+    print(f'Accuracy on Diabetes: {accuracy_on_pos_r*100:.2f}%')
+
+    # EXTERNAL
+    print("Pred vs External Dataset")
+    print(X_external)
+    accuracy_external = (X_external['Actual']==X_external['Predict']).sum() / len(X_external)
+    accuracy_on_neg_xtn = ((X_external['Actual']==0) & (X_external['Predict']==0)).sum()  / (X_external['Actual']==0).sum()
+    accuracy_on_pos_xtn = ((X_external['Actual']==1) & (X_external['Predict']==1)).sum() / (X_external['Actual']==1).sum()
+    print(f'Accuracy: {accuracy_external*100:.2f}%')
+    print(f'Accuracy on Not Diabetes: {accuracy_on_neg_xtn*100:.2f}%')
+    print(f'Accuracy on Diabetes: {accuracy_on_pos_xtn*100:.2f}%')
 
     results = pd.DataFrame({
-        "Model": ["RandomForestClassifier"],
-        "Accuracy on Processed Dataset": [f'{accuracy*100:.2f}%'],
-        "Accuracy on Not Diabetes": [f'{accuracy_on_neg*100:.2f}%'],
-        "Accuracy on Diabetes": [f'{accuracy_on_pos*100:.2f}%']
+        f'{model_name}': ["Accuracy on Dataset", "Accuracy on Not Diabetes", "Accuracy on Diabetes"],
+        "Processed": [
+            f'{accuracy_processed * 100:.2f}%',
+            f'{accuracy_on_neg_ppr * 100:.2f}%',
+            f'{accuracy_on_pos_ppr * 100:.2f}%'
+        ],
+        "Raw": [
+            f'{accuracy_raw * 100:.2f}%',
+            f'{accuracy_on_neg_r * 100:.2f}%',
+            f'{accuracy_on_pos_r * 100:.2f}%'
+        ],
+        "External": [
+            f'{accuracy_external * 100:.2f}%',
+            f'{accuracy_on_neg_xtn * 100:.2f}%',
+            f'{accuracy_on_pos_xtn * 100:.2f}%'
+        ]
     })
 
     dir = Path(__file__).parent.parent

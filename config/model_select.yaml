@@ -1,1 +1,8 @@
-model: "RandomForest"
+# Predict Visualize Evaluate API
+model: "Ensemble"
+
+# Voting/Ensemble:
+model_ensemble:
+  model1: "RandomForest"
+  model2: "Logistic"
+  model3: "CatBoost"
