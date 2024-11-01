@@ -49,7 +49,7 @@ if __name__ == "__main__":
     print("Dữ liệu dataset:")
     print(df)
     check_samples(df)
-    removing_features = features_engineering.check_correlation(df,0.8)
+    removing_features = features_engineering.check_correlation(df,0.8, "Outcome")
     df = features_engineering.remove_features(df, removing_features)
 
     print("----------------------Xóa dữ liệu lặp--------------------------------------------------------------------------------------------------------------")
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     else:
         print("----------------------Cân bằng huấn luyện--------------------------------------------------------------------------------------------------------------")
         balance_function = utilities.dynamic_import_balance(balance_select)  # Dynamically get the balance function
-        balanced_train = balance_function(final_train)
+        balanced_train = balance_function(final_train,"Outcome")
         print("Dữ liệu huấn luyện sau SMOTE:")
         print(balanced_train)
         check_samples(balanced_train)

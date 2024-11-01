@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-def check_correlation(dataset, threshold):
-    dataset = dataset.drop("Outcome",axis=1)
+def check_correlation(dataset, threshold, cat_feature):
+    dataset = dataset.drop(cat_feature,axis=1)
     col_corr = set()  # Tập hợp các thuộc tính đã bị xóa
     corr_matrix = dataset.corr(numeric_only=True) # Chỉ lấy thuộc tính dạng numeric
     for i in range(len(corr_matrix.columns)):
