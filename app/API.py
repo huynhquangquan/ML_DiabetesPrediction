@@ -39,7 +39,6 @@ def API():
 
     full_pipeline = utilities.joblib_load(f'{name}')
 
-
     @app.post('/predict/')
     async def predict_adclick(input_data: Diabetes):
         try:
@@ -60,13 +59,13 @@ def API():
             return {'prediction': prediction_result}
 
         except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+            raise HTTPException(status_code=400, detail="API server is closed")
     return app
 
 
 if __name__ == '__main__':
     app = API() # Initialize app
     if app is not None:
-        uvicorn.run(app,host='127.0.0.1',port=8000)
+        uvicorn.run(app,host='127:0:0:1',port=8000)
     else:
         print("API chạy thất bại")

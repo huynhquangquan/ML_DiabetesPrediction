@@ -1,5 +1,5 @@
 # Predict Visualize Evaluate API
-model: "Ensemble"
+model: "RandomForest"
 
 # Voting/Ensemble:
 model_ensemble:
