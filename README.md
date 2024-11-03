@@ -197,7 +197,7 @@ Sau đó sử dụng lệnh trên Command Prompt hoặc Terminal trên máy tín
 choco install make
 ```
 
-**Cài đặt các thư viện cần thiết**:
+**Cài đặt các thư viện cần thiết trong terminal ảo**:
 
 Xem danh sách trong requirements.txt và cài đặt từng thư viện với lệnh:
 ```
