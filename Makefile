@@ -77,3 +77,6 @@ clear-all: clear-raw-data clear-processed-data clear-models-and-results
 #-----------------API(application programming interface)------------------
 run-api:
 	python -m app.API
+
+run-uvicorn:
+	uvicorn app.API:API --reload --factory
