@@ -125,7 +125,7 @@ CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là đư�
 **_requirements.txt_**: Danh sách các thư viện và phiên bản cần thiết để chạy dự án.
 
 **_app_**: Thư mục để chứa ứng dụng\
-**_-API.py_**: REST API với FastAPI để thực hiện dự đoán.\
+**_-API.py_**: Tạo REST API với FastAPI để thực hiện dự đoán.\
 **_-DiabetesPrediction.html_**: Giao diện HTML cho ứng dụng, chủ yếu để nhập số liệu, thao tác dễ dàng và nhanh hơn (Cấu trúc nói chung không bắt buộc có cái này).
 
 **_config_**: Thư mục để chứa các thiết lập\
