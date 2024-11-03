@@ -118,7 +118,6 @@ ML_DiabetesPrediction
 ```
 CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là được tạo tự động từ việc chạy thư viện, trong đó có thư viện CatBoost nếu chạy sẽ tạo ra thư mục catboost-info, tương tự với các thư mục khác.
 ### Dưới đây là mô tả về cấu trúc của dự án:
-Chi tiết các thư mục chính:
 
 **_Makefile_**: Chứa các lệnh tự động hóa cho việc cài đặt, chạy, hoặc kiểm tra dự án.
 
@@ -131,8 +130,8 @@ Chi tiết các thư mục chính:
 **_-DiabetesPrediction.html_**: Giao diện HTML cho ứng dụng, chủ yếu để nhập số liệu, thao tác dễ dàng và nhanh hơn (Cấu trúc nói chung không bắt buộc có cái này).
 
 **_config_**: Thư mục để chứa các thiết lập\
-**_-dataset_config.yaml_**: Chọn tên tập dữ liệu để xử lý, đường dẫn tải tập dữ liệu từ Kaggle.
-**_-model_select.yaml_**: Chọn mô hình để chạy hoặc tổ hợp mô hình
+**_-dataset_config.yaml_**: Chọn tên tập dữ liệu để xử lý, đường dẫn tải tập dữ liệu từ Kaggle.\
+**_-model_select.yaml_**: Chọn mô hình để chạy hoặc tổ hợp mô hình.\
 **_-preprocess_config.yaml_**: Thiết lập quy trình xử lý dữ liệu.
 
 **_data_**: Thư mục để chứa các tập dữ liệu\
@@ -153,7 +152,7 @@ Chi tiết các thư mục chính:
 **_-utilities.py_**: Chứa các hàm tiện ích dùng chung trong dự án.\
 **_-dataset_**: download_data.py - Tải dữ liệu thô.\
 **_-evaluate_**: evaluate.py - Đánh giá hiệu suất mô hình.\
-**_-models_**: Tệp chứa các mã nguồn huấn luyện và lưu mô hình\
+**_-models_**: Tệp chứa các mã nguồn huấn luyện và lưu mô hình.\
 **_-prediction_**: prediction.py - Dự đoán đầu ra của mô hình.
 
 **_-preprocessing_**: Tiền xử lý dữ liệu\
@@ -162,7 +161,7 @@ Chi tiết các thư mục chính:
 **_--imputation_**: Các phương pháp xử lý giá trị thiếu, bao gồm KNN, mean, và median.\
 **_--outliers_**: Các phương pháp phát hiện và xử lý ngoại lai, attribute_wise.py và row_wise.py.\
 **_--scaler_**: Các phương pháp chuẩn hóa dữ liệu, bao gồm MinMax, Robust, và Standard scaler.\
-**_--visualization_**: visualization.py - Mã nguồn thực hiện vẽ hình, biểu đồ, ma trận kết quả của mô hình
+**_--visualization_**: visualization.py - Mã nguồn thực hiện vẽ hình, biểu đồ, ma trận kết quả của mô hình.
 
 # Tiền Xử Lý
 ### Các bước tiền xử lý quan trọng bao gồm:
