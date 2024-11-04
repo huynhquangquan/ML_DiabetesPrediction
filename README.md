@@ -210,8 +210,9 @@ pip install -r requirements.txt
 Sử dụng lệnh make thông qua terminal ảo hoặc chạy trực tiếp file python để chạy chương trình.
 
 Chọn cách xử lý dữ lý trong preprocess_config.yaml.\
-Trước khi chạy, hãy chọn mô hình để đánh giá, vẽ biểu đồ trực quan, dự đoán kết quả.\
+Trước khi chạy, hãy chọn mô hình trong model_select.yaml để đánh giá, vẽ biểu đồ trực quan, dự đoán kết quả.\
 Đảm bảo mọi thiết lập đều có đầy đủ, đúng tên định nghĩa.
+Mọi thiết lập đều nằm ở trong tệp tin config.
 
 ### Chạy mô hình máy học
 #### Tải tập dữ liệu thô
