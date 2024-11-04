@@ -2,15 +2,14 @@
 Dự án này nhằm mục đích dự đoán nguy cơ mắc bệnh tiểu đường bằng cách sử dụng học máy, với trọng tâm là xác định chính xác những người có khả năng mắc bệnh. Mô hình sử dụng là RandomForest, Logistic Regression, CatBoost và mô hình tổ hợp, được triển khai với FastAPI để đưa ra dự đoán theo dữ liệu thực.
 
 # Mục Lục
-Tổng Quan Dự Án\
-Dữ Liệu\
-Cấu Trúc của Dự Án\
-Quá Trình Xây Dựng Mô Hình\
-Tiền Xử Lý\
-Lựa Chọn và Đánh Giá Mô Hình\
-Cài Đặt và Sử Dụng\
-Cải Thiện Trong Tương Lai\
-Đóng Góp
+* Tổng Quan Dự Án
+* Dữ Liệu
+* Cấu Trúc của Dự Án
+* Quá Trình Xây Dựng Mô Hình
+* Tiền Xử Lý
+* Lựa Chọn và Đánh Giá Mô Hình
+* Cài Đặt và Sử Dụng
+* Cải Thiện Trong Tương Lai
 
 # Tổng Quan Dự Án
 Dự án này được thiết kế để phát hiện nguy cơ mắc bệnh tiểu đường thông qua việc phân tích dữ liệu y tế. Sử dụng các phương pháp xử lý dữ liệu, xây dựng mô hình máy học, so sánh kết quả đánh giá, kết quả dự đoán của mô hình lên các dữ liệu thực và chọn ra mô hình có kết quả tốt nhất, FastAPI được dùng để triển khai mô hình dưới dạng REST API.
@@ -210,14 +209,40 @@ pip install -r requirements.txt
 ## Sử dụng
 Sử dụng lệnh make thông qua terminal ảo hoặc chạy trực tiếp file python để chạy chương trình.
 
-### Chạy Mô Hình
-Để huấn luyện, kiểm tra, đánh giá mô hình, chọn mô hình để chạy trong model_select.yaml ở trong tệp tin config và chạy lệnh trong terminal ảo:
+Chọn cách xử lý dữ lý trong preprocess_config.yaml.\
+Trước khi chạy, hãy chọn mô hình để đánh giá, vẽ biểu đồ trực quan, dự đoán kết quả.\
+Đảm bảo mọi thiết lập đều có đầy đủ, đúng tên định nghĩa.
+
+### Chạy mô hình máy học
+#### Tải tập dữ liệu thô
 ```
-make total-evaluation
+make download-raw-data
 ```
 
+#### Tiền xử lý dữ liệu
+```
+make preprocess
+```
+
+#### Huấn luyện
+Lệnh này sẽ huấn luyện mô hình trên đường dần src.models.(tên mô hình)
+```
+make train.(tên mô hình)
+```
+
+#### Đánh giá mô hình
+```
+make evaluate
+```
+#### Biểu đồ trực quan
+```
+make visualize
+```
+#### Dự đoán kết quả
+```
+make predict
+```
 ### Triển Khai API
-
 Để bắt đầu API với FastAPI, chạy:
 ```
 make run-api
@@ -227,6 +252,44 @@ hoặc
 make run-uvicorn
 ```
 Sau khi chạy, truy cập tài liệu API tại http://127.0.0.1:8000/docs.
+
+### Dọn dẹp
+Sau lệnh sẽ có OS=(hệ điều hành), ở đây sẽ có 2 hệ điều hành, WindowOS(win), Unix-likeOS (unix)
+#### Dọn dữ liệu ngoài
+```
+make clear-external-data OS=(hệ điều hành)
+```
+#### Dọn dữ liệu đã qua xử lý
+```
+make clear-processed-data OS=(hệ điều hành)
+```
+#### Dọn dữ liệu thô
+```
+make clear-raw-data OS=(hệ điều hành)
+```
+#### Dọn sạch mô hình đã huấn luyện, mọi kết quả của mô hình
+```
+make clear-models-and-results OS=(hệ điều hành)
+```
+
+### Lệnh chạy kết hợp
+Để tải dữ liệu thô, xử lý dữ liệu
+```
+make create-data
+```
+Để huấn luyện, đánh giá độ hiệu quả, hiệu suất và trực quan hóa mô hình, dự đoán kết quả:
+```
+make model=(tên mô hình) total-evaluation
+```
+Để xử lý lại dữ liệu, sau đó huấn luyện dựa trên dữ liệu đã được xử lý lại, đánh giá, trực quan hóa và dự đoán kết quả:
+```
+make model=(tên mô hình) total-evaluation-plus
+```
+Dọn dẹp tổng hợp
+```
+make clear-all OS=(hệ điều hành)
+```
+
 
 # Cải Thiện Trong Tương Lai
 **Nâng cao mô hình**: Thử nghiệm thêm các mô hình hoặc chiến lược tinh chỉnh tham số.\
