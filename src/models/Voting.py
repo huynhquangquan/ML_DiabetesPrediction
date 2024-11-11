@@ -2,12 +2,12 @@ import warnings
 from src import utilities
 from pathlib import Path
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import RandomizedSearchCV
 import numpy as np
 
 if __name__ == "__main__":
-    # warnings.filterwarnings('ignore')
+    warnings.filterwarnings('ignore')
     scaling = utilities.scaling_config()
     # Split train data
     base_dir = Path(__file__).parent.parent
@@ -27,21 +27,20 @@ if __name__ == "__main__":
         X_train, bin = utilities.scaling(X_train, bin)
         bin = None
 
-    model = RandomForestClassifier(random_state=42)
+    # Define individual models and load them
+    model1, model2, model3 = utilities.model_ensemble()
+    model1 = utilities.joblib_load(model1)
+    model2 = utilities.joblib_load(model2)
+    model3 = utilities.joblib_load(model3)
 
-    # n_estimators = np.arange(100,500,10)
-    # max_depth = [None] + list(np.arange(1,20))
-    # class_weight = [{0:1,1:2}, 'balanced', None]
-    # param = {
-    #     'n_estimators': n_estimators,
-    #     'max_depth': max_depth,
-    #     'class_weight': class_weight
-    # }
+    # Create a soft voting classifier
+    voting_clf = VotingClassifier(
+        estimators=[(f'{model1}', model1), (f'{model2}', model2), (f'{model3}', model3)],
+        voting='soft',
+    )
 
-    # model = RandomizedSearchCV(model,param,cv=5,random_state=42)
-    model.fit(X_train, y_train)
-    # print(model.best_params_)
+    voting_clf.fit(X_train, y_train)
 
-    utilities.joblib_dump(model,'RandomForest')
+    utilities.joblib_dump(voting_clf,'Voting')
 
-    print("-------Lưu mô hình RandomForest hoàn tất")
+    print("-------Lưu mô hình Voting hoàn tất")

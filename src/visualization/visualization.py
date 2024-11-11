@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split, cross_val_score, learning_
 from sklearn.metrics import confusion_matrix, f1_score, recall_score, accuracy_score, classification_report
 
 if __name__=="__main__":
-    model_name = utilities.model_select()
+    model_name = utilities.model_select()['name']
     scaling = utilities.scaling_config()
     check_processed = bool(utilities.check_processed())
     check_model = bool(utilities.check_model(model_name))
@@ -27,7 +27,12 @@ if __name__=="__main__":
         bin = None
 
     # Create pred variable
-    y_pred = model.predict(X_test)
+    threshold = float(utilities.model_select()['threshold'])
+    if threshold > 1 or threshold <= 0:
+        raise RuntimeError("Threshold phải từ 0.1 đến 1.0")
+
+    y_proba = model.predict_proba(X_test)[:, 1]
+    y_pred = (y_proba >= threshold).astype(int)
 
     # Create classification report for Random Forest
     report = classification_report(y_test, y_pred, output_dict=True)

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def replace_missing_values(train,test):
     trainCopy = train.copy()
@@ -15,11 +16,15 @@ def replace_missing_values(train,test):
     test[numerical_features] = test[numerical_features].fillna(test[numerical_features].mean())
 
     # Include zero and negative
-    zero_features = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', "Insulin", 'BMI']
-    diabetes_mean = train[zero_features].mean()
-    train[zero_features] = train[zero_features].replace(0, diabetes_mean)
-    test[zero_features] = test[zero_features].replace(0, diabetes_mean)
+    zero_features = train[['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', "Insulin", 'BMI']]
+    for feature in zero_features:
+        mean = train[feature].mean()
+        train[feature] = np.where(train[feature] <= 0, mean, train[feature])
+        test[feature] = np.where(test[feature] <= 0, mean, test[feature])
     for feature in numerical_features:
         train[feature] = train[feature].astype(trainCopy[feature].dtype)
         test[feature] = test[feature].astype(trainCopy[feature].dtype)
+    train['BMI'] = train['BMI'].round(1)
+    test['BMI'] = test['BMI'].round(1)
+    print("-------Điền giá trị thiếu hoàn tất!")
     return train,test

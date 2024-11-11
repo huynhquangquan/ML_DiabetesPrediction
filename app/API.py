@@ -29,8 +29,9 @@ def API():
         allow_headers=["*"],  # Allows all headers
     )  # Connect HTML
 
-    # Must be rf or logr according to the project
-    name = utilities.model_select()
+    # load yaml config
+    name = utilities.model_select()['name']
+    threshold = float(utilities.model_select()['threshold'])
 
     # Check whether the model exist or not
     check = bool(utilities.check_model(name))
@@ -40,7 +41,7 @@ def API():
     full_pipeline = utilities.joblib_load(f'{name}')
 
     @app.post('/predict/')
-    async def predict_adclick(input_data: Diabetes):
+    async def predict_diabetes(input_data: Diabetes):
         try:
             x_values = pd.DataFrame({
                 'Pregnancies': [int(input_data.Pregnancies)],
@@ -53,8 +54,10 @@ def API():
                 'Age': [int(input_data.Age)]
             })
 
-            prediction = full_pipeline.predict(x_values)
-
+            prediction_proba = full_pipeline.predict_proba(x_values)[:,1]
+            prediction = (prediction_proba >= threshold).astype(int)
+            # prediction = full_pipeline.predict(x_values)
+            
             prediction_result = 'Diabetes' if prediction[0] == 1 else 'Not Diabetes'
             return {'prediction': prediction_result}
 

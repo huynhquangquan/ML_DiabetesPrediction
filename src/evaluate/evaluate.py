@@ -8,7 +8,7 @@ from src import utilities
 import numpy as np
 
 if __name__ == "__main__":
-    model_name = utilities.model_select()
+    model_name = utilities.model_select()['name']
     scaling = utilities.scaling_config()
     check_processed = utilities.check_processed()
     check_model = utilities.check_model(model_name)
@@ -29,7 +29,11 @@ if __name__ == "__main__":
     model = utilities.joblib_load(model_name)
 
     # Create pred variable
-    y_pred = model.predict(X_test)
+    threshold = float(utilities.model_select()['threshold'])
+    if threshold > 1 or threshold <= 0:
+        raise RuntimeError("Threshold phải từ 0.1 đến 1.0")
+    y_proba = model.predict_proba(X_test)[:, 1]
+    y_pred = (y_proba >= threshold).astype(int)
 
     # Evaluate model with cross_validation
     scores_auc = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1, scoring= "roc_auc")

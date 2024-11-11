@@ -28,28 +28,6 @@ if __name__ == "__main__":
 
     model = LogisticRegression(max_iter= 10000000,random_state=42)
 
-    # HyperParameters
-    # Define
-    # solver= ["lbfgs", "newton-cg", "sag", "saga"]
-    # penalty= ["l2", None]
-    # C = [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000]
-    # class_weight = [{0:3,1:2}]
-    # fit_intercept= [True, False, None]
-    # dual= [True, False, None]
-    # max_iter = np.arange(50,100)
-
-    # param_grid = {
-    #     "solver": solver,
-    #     "penalty": penalty,
-    #     "C": C,
-    #     "class_weight": class_weight,
-    #     "fit_intercept": fit_intercept,
-    #     "dual": dual
-    #     # "max_iter": max_iter
-    # }
-
-    # random_search = GridSearchCV(model,param_grid,cv=5,n_jobs=-1,verbose=1, error_score="raise")
-
     model.fit(X_train, y_train)
 
     utilities.joblib_dump(model,'Logistic')

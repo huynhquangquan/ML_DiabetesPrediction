@@ -21,4 +21,6 @@ def replace_missing_values(train,test):
         dtype = train[column].dtype
         ImputedTrainDataFrame[column] = ImputedTrainDataFrame[column].astype(dtype)
         ImputedTestDataFrame[column] = ImputedTestDataFrame[column].astype(dtype)
+    ImputedTrainDataFrame['BMI'] = ImputedTrainDataFrame['BMI'].round(1)
+    ImputedTestDataFrame['BMI'] = ImputedTestDataFrame['BMI'].round(1)
     return ImputedTrainDataFrame, ImputedTestDataFrame
