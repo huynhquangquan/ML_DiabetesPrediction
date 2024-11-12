@@ -1,6 +1,6 @@
 # Predict Visualize Evaluate API
 model:
-  name: "RandomForest"
+  name: "Voting"
   threshold: "0.5"
 
 # Voting/Ensemble:

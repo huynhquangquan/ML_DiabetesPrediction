@@ -27,18 +27,8 @@ if __name__ == "__main__":
         X_train, bin = utilities.scaling(X_train, bin)
         bin = None
 
-    model = RandomForestClassifier(random_state=42)
+    model = RandomForestClassifier(random_state=42, class_weight={0:1,1:2})
 
-    # n_estimators = np.arange(100,500,10)
-    # max_depth = [None] + list(np.arange(1,20))
-    # class_weight = [{0:1,1:2}, 'balanced', None]
-    # param = {
-    #     'n_estimators': n_estimators,
-    #     'max_depth': max_depth,
-    #     'class_weight': class_weight
-    # }
-
-    # model = RandomizedSearchCV(model,param,cv=5,random_state=42)
     model.fit(X_train, y_train)
     # print(model.best_params_)
 

@@ -27,7 +27,6 @@ if __name__ == "__main__":
         X_train, X_test = utilities.scaling(X_train, X_test)
     print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
     model = utilities.joblib_load(model_name)
-
     # Create pred variable
     threshold = float(utilities.model_select()['threshold'])
     if threshold > 1 or threshold <= 0:
@@ -56,6 +55,7 @@ if __name__ == "__main__":
         "Model": [model_name],
         "Average(CV) ROC_AUC": f'{scores_auc.mean():.2f}',
         "Average(CV) Accuracy": f'{scores_accuracy.mean():.2f}',
+        "Threshold": f'{utilities.model_select()['threshold']}',
         "Accuracy on Test": f'{accuracy:.2f}',
         "Precision": f'{precision:.2f}',
         "Recall": f'{recall:.2f}',

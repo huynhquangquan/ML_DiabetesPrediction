@@ -1,4 +1,4 @@
 RandomForest,Processed,Raw,External
-Accuracy on Dataset,95.78%,89.58%,90.26%
-Accuracy on Not Diabetes,97.18%,93.60%,93.49%
-Accuracy on Diabetes,92.63%,82.09%,82.80%
+Accuracy on Dataset,97.93%,78.39%,88.89%
+Accuracy on Not Diabetes,97.97%,94.20%,89.16%
+Accuracy on Diabetes,97.85%,48.88%,88.24%

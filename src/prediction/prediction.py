@@ -21,6 +21,7 @@ if __name__=="__main__":
     data_samples_processed = utilities.read_processed(dataset)
     data_samples_raw = utilities.read_raw(dataset)
     data_sample_external = utilities.read_processed('test.csv')
+    # data_sample_external = utilities.read_external()
     # Shuffle before defining X and y
     data_samples_processed = data_samples_processed.sample(frac=1)
     data_samples_external = data_sample_external.sample(frac=1)
@@ -38,21 +39,22 @@ if __name__=="__main__":
         raise RuntimeError("Threshold phải từ 0.1 đến 1.0")
 
     if scaling == "enable":
-        bin = X_processed.copy()
-        X_processed, bin = utilities.scaling(X_processed,bin)
-        X_raw, bin = utilities.scaling(X_raw,bin)
-        X_external, bin = utilities.scaling(X_external,bin)
-        bin = None
+        X_train = utilities.read_processed('train.csv')
+        X_train = X_train.drop(columns=['Outcome'])
+        bin, X_processed_scaled = utilities.scaling(X_train,X_processed)
+        bin, X_raw_scaled = utilities.scaling(X_train,X_raw)
+        bin, X_external_scaled = utilities.scaling(X_train,X_external)
+        X_train, bin = None, None
     else:
-        X_processed = X_processed
-        X_raw = X_raw
-        X_external = X_external
+        X_processed_scaled = X_processed
+        X_raw_scaled = X_raw
+        X_external_scaled = X_external
 
-    y_proba = model.predict_proba(X_processed)[:, 1]
+    y_proba = model.predict_proba(X_processed_scaled)[:, 1]
     pred_processed = (y_proba >= threshold).astype(int)
-    y_proba = model.predict_proba(X_raw)[:, 1]
+    y_proba = model.predict_proba(X_raw_scaled)[:, 1]
     pred_raw = (y_proba >= threshold).astype(int)
-    y_proba = model.predict_proba(X_external)[:, 1]
+    y_proba = model.predict_proba(X_external_scaled)[:, 1]
     pred_external = (y_proba >= threshold).astype(int)
 
     X_processed['Actual'] = y_processed

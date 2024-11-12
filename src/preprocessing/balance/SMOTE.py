@@ -9,5 +9,7 @@ def balance_train(df, cat_feature):
 
     # Merge X and y to a single Dataframe
     balanced_train = pd.concat([pd.DataFrame(X_train,columns=X.columns), pd.DataFrame(y_train, columns=['Outcome'])],axis=1)
+    balanced_train['BMI'] = balanced_train['BMI'].round(1)
+    balanced_train['DiabetesPedigreeFunction'] = balanced_train['DiabetesPedigreeFunction'].round(3)
 
     return balanced_train

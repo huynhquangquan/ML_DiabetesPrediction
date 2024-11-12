@@ -22,9 +22,10 @@ if __name__=="__main__":
     model = utilities.joblib_load(model_name)
 
     if scaling == "enable":
-        bin = X_test.copy()
-        bin, X_test = utilities.scaling(bin, X_test)
-        bin = None
+        X_train = utilities.read_processed('train.csv')
+        X_train = X_train.drop(columns=['Outcome'])
+        X_train, X_test = utilities.scaling(X_train, X_test)
+        X_train = None
 
     # Create pred variable
     threshold = float(utilities.model_select()['threshold'])
