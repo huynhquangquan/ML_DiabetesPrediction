@@ -1,4 +1,4 @@
-Voting,Processed,Raw,External
+Voting,Processed,Raw,Preview Test
 Accuracy on Dataset,95.25%,74.74%,90.60%
 Accuracy on Not Diabetes,98.24%,95.80%,93.98%
 Accuracy on Diabetes,89.06%,35.45%,82.35%
