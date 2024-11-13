@@ -27,7 +27,7 @@ if __name__ == "__main__":
         X_train, bin = utilities.scaling(X_train, bin)
         bin = None
 
-    model = RandomForestClassifier(random_state=42, class_weight={0:1,1:2})
+    model = RandomForestClassifier(random_state=42)
 
     model.fit(X_train, y_train)
     # print(model.best_params_)

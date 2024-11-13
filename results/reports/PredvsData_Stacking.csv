@@ -1,4 +1,4 @@
 Stacking,Processed,Raw,External
-Accuracy on Dataset,94.74%,75.00%,88.89%
-Accuracy on Not Diabetes,98.24%,96.20%,93.98%
-Accuracy on Diabetes,87.50%,35.45%,76.47%
+Accuracy on Dataset,97.79%,76.69%,90.60%
+Accuracy on Not Diabetes,97.98%,96.00%,92.77%
+Accuracy on Diabetes,97.40%,40.67%,85.29%

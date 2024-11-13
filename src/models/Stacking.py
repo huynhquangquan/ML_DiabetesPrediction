@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # Choose rf as final estimator
     stacking_clf = StackingClassifier(
         estimators=[(f'{model1}', model1), (f'{model2}', model2), (f'{model3}', model3)],
-        final_estimator=RandomForestClassifier(),
+        final_estimator=LogisticRegression(),
     )
 
     stacking_clf.fit(X_train, y_train)

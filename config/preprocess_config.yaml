@@ -1,5 +1,5 @@
 scaling: "disable" # Any input except "enable" will disable it
-scaler: "standard" # Mustn't be blanked if scaling is enable
+scaler: "robust" # Mustn't be blanked if scaling is enable
 imputation: "median" # Mustn't be blanked
-balance_method: "None" # None to not use any method
-outliers_method: "None" # None to not use any method
+balance_method: "SMOTE" # None to not use any method
+outliers_method: "attribute_wise" # None to not use any method

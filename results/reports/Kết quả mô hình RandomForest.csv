@@ -1,2 +1,2 @@
 Model,Average(CV) ROC_AUC,Average(CV) Accuracy,Threshold,Accuracy on Test,Precision,Recall,F1-score,Imputation,Outliers,Balance,Scaling
-RandomForest,0.98,0.93,0.5,0.89,0.77,0.88,0.82,median,row_wise,SMOTE,None
+RandomForest,0.98,0.92,0.6,0.91,0.83,0.85,0.84,median,attribute_wise,SMOTE,None
