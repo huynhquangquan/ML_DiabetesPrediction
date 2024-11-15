@@ -27,6 +27,7 @@ ML_DiabetesPrediction
 ├── Makefile
 ├── README.md
 ├── requirements.txt
+├── lib_list.txt
 │
 ├── app
 │   ├── API.py
@@ -122,7 +123,9 @@ CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là đư�
 
 **_README.md_**: Mô tả tổng quan về dự án, cách cài đặt và sử dụng.
 
-**_requirements.txt_**: Danh sách các thư viện và phiên bản cần thiết để chạy dự án.
+**_requirements.txt_**: Danh sách các thư viện bao gồm các mô đun đi kèm với thư viện để chạy dự án.
+
+**_lib_list.txt_**: Tương tự với requirements.txt nhưng là danh sách ngắn hơn không bao gồm mô đun đi kèm mà chỉ chứa các tên thư viện quan trọng.
 
 **_app_**: Thư mục để chứa ứng dụng\
 **_-API.py_**: Tạo REST API với FastAPI để thực hiện dự đoán.\
@@ -198,12 +201,12 @@ choco install make
 
 **Cài đặt các thư viện cần thiết trong terminal ảo**:
 
-Có 2 file yêu cầu, requirements.txt là toàn bộ thư viện bao gồm module nhỏ được tương thích với nhau, requirements_single là danh sách từng tên của thư viện.\
+Có 2 file yêu cầu, requirements.txt là toàn bộ thư viện bao gồm module nhỏ được tương thích phiên bản với nhau, lib_list là danh sách từng tên của thư viện.\
 Sử dụng 1 trong 2 cách tải thư viện ở dưới đây:
 
--Xem danh sách trong requirements_single.txt và cài đặt từng thư viện với lệnh (nhanh):
+-Xem danh sách trong lib_list.txt và cài đặt từng thư viện với lệnh (nhanh):
 ```
-pip install (thư viện)
+pip install (tên thư viện)
 ```
 -Sử dụng lệnh này với requirements.txt để tải hết toàn bộ cùng một lúc (lâu):
 ```
