@@ -198,11 +198,14 @@ choco install make
 
 **Cài đặt các thư viện cần thiết trong terminal ảo**:
 
-Xem danh sách trong requirements.txt và cài đặt từng thư viện với lệnh:
+Có 2 file yêu cầu, requirements.txt là toàn bộ thư viện bao gồm module nhỏ được tương thích với nhau, requirements_single là danh sách từng tên của thư viện.\
+Sử dụng 1 trong 2 cách tải thư viện ở dưới đây:
+
+-Xem danh sách trong requirements_single.txt và cài đặt từng thư viện với lệnh (nhanh):
 ```
-pip install
+pip install (thư viện)
 ```
-hoặc sử dụng lệnh này để tải toàn bộ thư viện:
+-Sử dụng lệnh này với requirements.txt để tải hết toàn bộ cùng một lúc (lâu):
 ```
 pip install -r requirements.txt
 ```
