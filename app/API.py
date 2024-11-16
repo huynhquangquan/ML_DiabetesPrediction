@@ -40,6 +40,10 @@ def API():
 
     full_pipeline = utilities.joblib_load(f'{name}')
 
+    @app.get('/')
+    def welcome():
+        return {"Welcome: User"}
+    
     @app.post('/predict/')
     async def predict_diabetes(input_data: Diabetes):
         try:
