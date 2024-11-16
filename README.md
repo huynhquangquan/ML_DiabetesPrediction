@@ -204,11 +204,11 @@ choco install make
 Có 2 file yêu cầu, requirements.txt là toàn bộ thư viện bao gồm module nhỏ được tương thích phiên bản với nhau, lib_list là danh sách từng tên của thư viện.\
 Sử dụng 1 trong 2 cách tải thư viện ở dưới đây:
 
--Xem danh sách trong lib_list.txt và cài đặt từng thư viện với lệnh (nhanh):
+-Xem danh sách trong lib_list.txt và cài đặt từng thư viện với lệnh:
 ```
 pip install (tên thư viện)
 ```
--Sử dụng lệnh này với requirements.txt để tải hết toàn bộ cùng một lúc (lâu):
+-Sử dụng lệnh này với requirements.txt để tải hết toàn bộ cùng một lúc:
 ```
 pip install -r requirements.txt
 ```
