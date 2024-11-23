@@ -1,5 +1,6 @@
 # Mô Hình Dự Đoán Bệnh Tiểu Đường
-https://github.com/huynhquangquan/ML_DiabetesPrediction .
+https://github.com/huynhquangquan/ML_DiabetesPrediction
+
 Dự án này nhằm mục đích dự đoán nguy cơ mắc bệnh tiểu đường bằng cách sử dụng học máy, với trọng tâm là xác định chính xác những người có khả năng mắc bệnh. Mô hình sử dụng là RandomForest, Logistic Regression, CatBoost và mô hình tổ hợp, được triển khai với FastAPI để đưa ra dự đoán theo dữ liệu thực.
 
 # Mục Lục
