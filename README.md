@@ -178,9 +178,7 @@ CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là đư�
 # Lựa Chọn và Đánh Giá Mô Hình
 ### Các mô hình được đánh giá dựa trên:
 
-Hiệu suất trung bình, độ chính xác trung bình của cross-validation, độ chính xác trên tập kiểm tra.
-
-Trọng tâm đặc biệt vào độ nhớ của lớp dương tính (bệnh tiểu đường).
+Hiệu suất trung bình, độ chính xác trung bình cross-validation của tập huấn luyện, độ chính xác trên tập kiểm tra.
 
 # Cài Đặt và Sử Dụng
 ### Yêu Cầu
