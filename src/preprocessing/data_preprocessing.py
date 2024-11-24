@@ -3,7 +3,6 @@ from src import utilities
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 from src import features_engineering
-from imblearn.over_sampling import SMOTE
 import numpy as np
 
 def check_samples(df):
