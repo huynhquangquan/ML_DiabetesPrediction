@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # Preprocess Test set
     print("======================TEST==============================================================================================================")
     print("----------------------Điền giá trị thiếu--------------------------------------------------------------------------------------------------------------")
-    print("Dữ liệu huấn luyện sau khi điền:") # Test is already been transformed when fit imputating Train data.
+    print("Dữ liệu huấn luyện sau khi điền:") # Test has already been transformed when fit imputating Train data.
     print(imputation_test)
     check_samples(imputation_test)
 
