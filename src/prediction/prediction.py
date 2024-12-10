@@ -114,5 +114,5 @@ if __name__=="__main__":
     })
 
     dir = Path(__file__).parent.parent
-    results.to_csv(dir / '..' / 'results' / 'reports' / f'PredvsData_{model_name}.csv',index=False)
+    results.to_csv(dir / '..' / 'results' / 'reports' / f'PredvsData_{model_name}.csv',index=False, sep='|')
     print("-----Đã lưu PredvsData")

@@ -35,36 +35,25 @@ if __name__ == "__main__":
     y_pred = (y_proba >= threshold).astype(int)
 
     # Evaluate model with cross_validation
-    scores_auc = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1, scoring= "roc_auc")
+
     scores_accuracy = cross_val_score(model, X_train, y_train, cv=5, n_jobs=-1, scoring= "accuracy")
 
     # Evaluate model on test data
     accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test,y_pred)
-    print(f'Average(CV) ROC_AUC: {scores_auc.mean():.4f}')
     print(f'Average(CV) Accuracy: {scores_accuracy.mean():.4f}')
     print(f'Accuracy on Test: {accuracy:.4f}')
-    print(f'Precision: {precision:.4f}')
-    print(f'Recall: {recall:.4f}')
-    print(f'F1-score: {f1:.4f}')
 
     # Create table to save results
     ResultTable = pd.DataFrame({
         "Model": [model_name],
-        "Average(CV) ROC_AUC": f'{scores_auc.mean():.2f}',
         "Average(CV) Accuracy": f'{scores_accuracy.mean():.2f}',
         "Threshold": f'{utilities.model_select()['threshold']}',
         "Accuracy on Test": f'{accuracy:.2f}',
-        "Precision": f'{precision:.2f}',
-        "Recall": f'{recall:.2f}',
-        "F1-score": f'{f1:.2f}',
         "Imputation": f'{utilities.imputation_select()}',
         "Outliers": f'{utilities.outliers_select()}',
         "Balance": f'{utilities.balance_select()}',
         "Scaling": f'{utilities.scaler_select()}' if scaling == "enable" else 'None'
     })
 
-    ResultTable.to_csv(base_dir/f'results/reports/Kết quả mô hình {model_name}.csv', index=False)
+    ResultTable.to_csv(base_dir/f'results/reports/Kết quả mô hình {model_name}.csv', index=False, sep='|')
     print("-----Đã lưu kết quả mô hình")

@@ -1,7 +1,7 @@
 # Predict Visualize Evaluate API
 model:
-  name: "Stacking"
-  threshold: "0.7"
+  name: "RandomForest"
+  threshold: "0.6"
 
 # Voting/Ensemble:
 model_ensemble:
