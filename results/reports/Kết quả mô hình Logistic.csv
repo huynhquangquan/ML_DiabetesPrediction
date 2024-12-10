@@ -1,2 +1,2 @@
-Model,Average(CV) ROC_AUC,Average(CV) Accuracy,Threshold,Accuracy on Test,Precision,Recall,F1-score,Imputation,Outliers,Balance,Scaling
-Logistic,0.92,0.86,0.5,0.83,0.65,0.91,0.76,median,attribute_wise,SMOTE,None
+Model|Average(CV) Accuracy|Threshold|Accuracy on Test|Imputation|Outliers|Balance|Scaling
+Logistic|0.86|0.5|0.83|median|attribute_wise|SMOTE|None

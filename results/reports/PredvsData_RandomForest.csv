@@ -1,4 +1,4 @@
-RandomForest,Processed,Raw,Preview Test
-Accuracy on Dataset,97.79%,77.21%,90.60%
-Accuracy on Not Diabetes,97.98%,95.40%,92.77%
-Accuracy on Diabetes,97.40%,43.28%,85.29%
+RandomForest|Processed|Raw|Preview Test
+Accuracy on Dataset|97.79%|77.21%|90.60%
+Accuracy on Not Diabetes|97.98%|95.40%|92.77%
+Accuracy on Diabetes|97.40%|43.28%|85.29%

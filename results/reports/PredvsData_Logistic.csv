@@ -1,4 +1,4 @@
-Logistic,Processed,Raw,Preview Test
-Accuracy on Dataset,85.74%,68.36%,82.91%
-Accuracy on Not Diabetes,83.38%,82.40%,79.52%
-Accuracy on Diabetes,90.62%,42.16%,91.18%
+Logistic|Processed|Raw|Preview Test
+Accuracy on Dataset|85.74%|68.36%|82.91%
+Accuracy on Not Diabetes|83.38%|82.40%|79.52%
+Accuracy on Diabetes|90.62%|42.16%|91.18%

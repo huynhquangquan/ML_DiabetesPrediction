@@ -1,4 +1,4 @@
-CatBoost,Processed,Raw,Preview Test
-Accuracy on Dataset,97.28%,76.95%,91.45%
-Accuracy on Not Diabetes,98.24%,96.80%,93.98%
-Accuracy on Diabetes,95.31%,39.93%,85.29%
+CatBoost|Processed|Raw|Preview Test
+Accuracy on Dataset|97.28%|76.95%|91.45%
+Accuracy on Not Diabetes|98.24%|96.80%|93.98%
+Accuracy on Diabetes|95.31%|39.93%|85.29%
