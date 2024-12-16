@@ -7,7 +7,6 @@ from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware  # Post request for HTML
 from src import utilities
 
-
 def API():
     class Diabetes(BaseModel):
         Pregnancies: int
@@ -50,7 +49,7 @@ def API():
         "Insulin": (0, 600),
         "BMI": (10, 70),
         "DiabetesPedigreeFunction": (0, 2),
-        "Age": (0, 120),
+        "Age": (1, 120),
     }
 
     def validate_limits(data: dict) -> str:

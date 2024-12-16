@@ -24,97 +24,96 @@ https://www.kaggle.com/datasets/akshaydattatraykhare/diabetes-dataset
 
 ```
 ML_DiabetesPrediction
-├── Makefile
-├── README.md
-├── requirements.txt
-├── lib_list.txt
-│
-├── app
-│   ├── API.py
-│   └── DiabetesPrediction.html
-│
-├── config
-│   ├── dataset_config.yaml
-│   ├── model_select.yaml
-│   └── preprocess_config.yaml
-│
-├── data
-│   ├── external
-│   │   └── external.csv
-│   ├── processed
-│   │   ├── diabetes.csv
-│   │   ├── test.csv
-│   │   └── train.csv
-│   └── raw
-│       └── diabetes.csv
-│
-├── models
-│   ├── CatBoost
-│   ├── Ensemble
-│   ├── Logistic
-│   └── RandomForest
-│
-├── notebooks
-│   └── Diabetes_EDA.ipynb
-│
-├── results
-│   ├── figures
-│   │   ├── Classification Report - CatBoost.png
-│   │   ├── Classification Report - Ensemble.png
-│   │   ├── Classification Report - Logistic.png
-│   │   ├── Classification Report - RandomForest.png
-│   │   ├── Confusion Matrix - CatBoost.png
-│   │   ├── Confusion Matrix - Ensemble.png
-│   │   ├── Confusion Matrix - Logistic.png
-│   │   └── Confusion Matrix - RandomForest.png
-│   └── reports
-│       ├── Model Results - CatBoost.csv
-│       ├── Model Results - Ensemble.csv
-│       ├── Model Results - Logistic.csv
-│       ├── Model Results - RandomForest.csv
-│       ├── Predictions vs Actual - CatBoost.csv
-│       ├── Predictions vs Actual - Ensemble.csv
-│       ├── Predictions vs Actual - Logistic.csv
-│       └── Predictions vs Actual - RandomForest.csv
-│
-└── src
-    ├── features_engineering.py
-    ├── utilities.py
+    │   lib_list.txt
+    │   Makefile
+    │   README.md
+    │   requirements.txt
     │
-    ├── dataset
-    │   └── download_data.py
+    ├───app
+    │       API.py
     │
-    ├── evaluate
-    │   └── evaluate.py
+    ├───config
+    │       dataset_config.yaml
+    │       model_select.yaml
+    │       preprocess_config.yaml
     │
-    ├── models
-    │   ├── CatBoost.py
-    │   ├── Ensemble.py
-    │   ├── Logistic.py
-    │   └── RandomForest.py
+    ├───data
+    │   ├───processed
+    │   │       diabetes.csv
+    │   │       test.csv
+    │   │       train.csv
+    │   │
+    │   └───raw
+    │           diabetes.csv
     │
-    ├── prediction
-    │   └── prediction.py
+    ├───models
+    │       CatBoost
+    │       Logistic
+    │       RandomForest
     │
-    ├── preprocessing
-    │   ├── data_preprocessing.py
-    │   ├── balance
-    │   │   ├── RUS.py
-    │   │   └── SMOTE.py
-    │   ├── imputation
-    │   │   ├── KNN.py
-    │   │   ├── mean.py
-    │   │   └── median.py
-    │   ├── outliers
-    │   │   ├── attribute_wise.py
-    │   │   └── row_wise.py
-    │   └── scaler
-    │       ├── minmax.py
-    │       ├── robust.py
-    │       └── standard.py
+    ├───notebooks
+    │       Diabetes_Exploring.ipynb
+    │       Diabetes_Inference.ipynb
+    │       Diabetes_Modeling.ipynb
     │
-    └── visualization
-        └── visualization.py
+    ├───results
+    │   ├───figures
+    │   │       Báo cáo phân loại - CatBoost.png
+    │   │       Báo cáo phân loại - Logistic.png
+    │   │       Báo cáo phân loại - RandomForest.png
+    │   │       Ma trận nhầm lẫn - CatBoost.png
+    │   │       Ma trận nhầm lẫn - Logistic.png
+    │   │       Ma trận nhầm lẫn - RandomForest.png
+    │   │
+    │   └───reports
+    │           Kết quả mô hình CatBoost.csv
+    │           Kết quả mô hình Logistic.csv
+    │           Kết quả mô hình RandomForest.csv
+    │           PredvsData_CatBoost.csv
+    │           PredvsData_Logistic.csv
+    │           PredvsData_RandomForest.csv
+    │
+    └───src
+        │   features_engineering.py
+        │   utilities.py
+        │
+        ├───dataset
+        │       download_data.py
+        │
+        ├───evaluate
+        │       evaluate.py
+        │
+        ├───models
+        │       CatBoost.py
+        │       Logistic.py
+        │       RandomForest.py
+        │
+        ├───prediction
+        │       prediction.py
+        │
+        ├───preprocessing
+        │   │   data_preprocessing.py
+        │   │
+        │   ├───balance
+        │   │       RUS.py
+        │   │       SMOTE.py
+        │   │
+        │   ├───imputation
+        │   │       KNN.py
+        │   │       mean.py
+        │   │       median.py
+        │   │
+        │   ├───outliers
+        │   │       attribute_wise.py
+        │   │       row_wise.py
+        │   │
+        │   └───scaler
+        │           minmax.py
+        │           robust.py
+        │           standard.py
+        │
+        └───visualization
+                visualization.py
 ```
 CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là được tạo tự động từ việc chạy thư viện, trong đó có thư viện CatBoost nếu chạy sẽ tạo ra thư mục catboost-info, tương tự với các thư mục khác.
 ### Dưới đây là mô tả về cấu trúc của dự án:
@@ -129,11 +128,10 @@ CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là đư�
 
 **_app_**: Thư mục để chứa ứng dụng\
 **_-API.py_**: Tạo REST API với FastAPI để thực hiện dự đoán.\
-**_-DiabetesPrediction.html_**: Giao diện HTML cho ứng dụng, chủ yếu để nhập số liệu, thao tác dễ dàng và nhanh hơn (Cấu trúc nói chung không bắt buộc có cái này).
 
 **_config_**: Thư mục để chứa các thiết lập\
 **_-dataset_config.yaml_**: Chọn tên tập dữ liệu để xử lý, đường dẫn tải tập dữ liệu từ Kaggle.\
-**_-model_select.yaml_**: Chọn mô hình để chạy hoặc tổ hợp mô hình.\
+**_-model_select.yaml_**: Chọn mô hình để chạy hoặc tổ hợp mô hình, ngưỡng dự đoán của mô hình.\
 **_-preprocess_config.yaml_**: Thiết lập quy trình xử lý dữ liệu.
 
 **_data_**: Thư mục để chứa các tập dữ liệu\
@@ -143,7 +141,7 @@ CHÚ Ý: Những thư mục, tập tin không nằm trong cấu trúc là đư�
 
 **_models_**: Thư mục để chứa các mô hình đã lưu
 
-**_notebooks_**: Thư mục để chứa notebook EDA
+**_notebooks_**: Thư mục để chứa notebook
 
 **_results_**: Thư mục chứa kết quả mô hình\
 **_-figures_**: Lưu trữ các biểu đồ và ma trận nhầm lẫn của từng mô hình.\
@@ -216,7 +214,7 @@ pip install -r requirements.txt
 Sử dụng lệnh make thông qua terminal ảo hoặc chạy trực tiếp file python để chạy chương trình.
 
 Chọn cách xử lý dữ lý trong preprocess_config.yaml.\
-Trước khi chạy, hãy chọn mô hình để đánh giá, vẽ biểu đồ trực quan, dự đoán kết quả.\
+Trước khi chạy, hãy chọn mô hình sử dụng và ngưỡng dự đoán của mô hình trong model_select.yaml để đánh giá, vẽ biểu đồ trực quan, dự đoán kết quả.\
 Đảm bảo mọi thiết lập đều có đầy đủ, đúng tên định nghĩa.
 
 ### Chạy mô hình máy học
